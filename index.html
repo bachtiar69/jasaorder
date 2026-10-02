@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JASTIP BAHCTIAR</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f7f8;color:#171717}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid #eee}
+.nav{max-width:1100px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:21px;font-weight:800}.brand span{color:#f97316}
+.cart{border:0;background:#171717;color:white;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer}
+.hero{max-width:1100px;margin:20px auto;padding:0 18px}
+.heroBox{background:linear-gradient(135deg,#171717,#333);color:white;border-radius:24px;padding:30px 24px;display:flex;justify-content:space-between;gap:20px;align-items:center;overflow:hidden}
+.hero h1{font-size:clamp(30px,6vw,52px);line-height:1;margin:0 0 12px}
+.hero p{color:#ddd;margin:0 0 18px}.badge{display:inline-block;background:#f97316;padding:7px 12px;border-radius:999px;font-weight:800;font-size:13px}
+.heroEmoji{font-size:100px;filter:drop-shadow(0 15px 15px #0008)}
+.wrap{max-width:1100px;margin:auto;padding:0 18px 110px}
+.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:28px 0 14px}.sectionTitle h2{margin:0}
+.restaurantSection{margin:34px 0}.restaurantHeader{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.restaurantIcon{width:50px;height:50px;border-radius:15px;overflow:hidden;background:#fff0df;display:grid;place-items:center;font-size:27px;flex:none}
+.restaurantIcon img{width:100%;height:100%;object-fit:cover}
+.restaurantHeader h2{margin:0 0 3px;font-size:22px}.restaurantHeader span{font-size:13px;color:#777}
+.restaurantBanner{width:100%;height:170px;object-fit:cover;border-radius:20px;margin-bottom:14px;background:#eee;display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:white;border:1px solid #eee;border-radius:20px;overflow:hidden;box-shadow:0 5px 20px #00000008}
+.photo{height:180px;background:#fff0df;overflow:hidden;display:grid;place-items:center;font-size:72px}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.body{padding:16px}.body h3{margin:0 0 6px}.desc{color:#777;font-size:14px;min-height:40px}
+.price{font-weight:900;font-size:19px;margin:12px 0}
+.add{width:100%;border:0;background:#f97316;color:white;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}
+.add:active{transform:scale(.98)}
+.toast{position:fixed;top:78px;left:50%;transform:translateX(-50%) translateY(-20px);background:#171717;color:#fff;padding:12px 18px;border-radius:999px;font-weight:800;z-index:60;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.editRow{display:flex;align-items:center;gap:8px;margin-top:8px}.qtyBtn{border:0;background:#eee;border-radius:9px;width:32px;height:32px;font-size:18px;font-weight:900;cursor:pointer}.removeBtn{margin-left:auto;border:0;background:#fee2e2;color:#b91c1c;border-radius:9px;padding:7px 10px;font-weight:800;cursor:pointer}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #eee;padding:12px 18px;z-index:20}
+.bottomIn{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.checkout{border:0;background:#16a34a;color:white;padding:13px 20px;border-radius:13px;font-weight:900;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:30;padding:14px;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}.sheet{background:#fff;width:min(650px,100%);max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:22px}
+.close{float:right;border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer}
+.field{margin:14px 0}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:7px}
+.field input,.field textarea{width:100%;padding:12px 13px;border:1px solid #ddd;border-radius:12px;font:inherit}
+.field textarea{min-height:75px;resize:vertical}.locRow{display:flex;gap:8px}.locBtn{border:0;background:#111;color:#fff;border-radius:12px;padding:12px;font-weight:800;cursor:pointer}
+.status{font-size:13px;margin-top:7px;color:#16a34a}.order{background:#f7f7f7;border-radius:14px;padding:12px;margin:16px 0}
+.orderLine{display:flex;justify-content:space-between;margin:7px 0;gap:10px}.total{font-size:20px;font-weight:900;border-top:1px solid #ddd;padding-top:10px;margin-top:10px}
+.wa{width:100%;border:0;background:#16a34a;color:white;border-radius:13px;padding:15px;font-size:16px;font-weight:900;cursor:pointer}
+.guide{margin-top:28px;padding:16px;background:#fff;border:1px dashed #ddd;border-radius:16px;color:#555;font-size:13px}
+@media(max-width:600px){.heroBox{padding:24px 20px}.heroEmoji{font-size:70px}.restaurantBanner{height:130px}.photo{height:160px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">🍴 <span>JASTIP</span> BAHCTIAR</div>
+    <button class="cart" onclick="openCheckout()">🛒 Keranjang (<span id="count">0</span>)</button>
+  </div>
+</header>
+<div class="toast" id="toast"></div>
+
+<section class="hero">
+  <div class="heroBox">
+    <div>
+      <span class="badge">PROMO HARI INI</span>
+      <h1>Pesan makanan<br>jadi lebih mudah.</h1>
+      <p>Pilih restoran, pilih menu, checkout, lalu langsung WhatsApp.</p>
+    </div>
+    <div class="heroEmoji">🍗</div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="sectionTitle">
+    <h2>🍽️ Pilih Restoran</h2>
+    <span style="color:#777">Menu dari berbagai resto</span>
+  </div>
+
+  <div id="products"></div>
+
+  <div class="guide">
+    <b>🛠️ PETUNJUK EDIT:</b><br><br>
+    Cari <b>const RESTAURANTS=[</b> di kode. Di sana Anda bisa menambah restoran,
+    banner, logo, dan foto setiap menu.<br><br>
+    Foto menu bisa diletakkan di folder <b>images/</b>, lalu isi:
+    <b>image:"images/nama-foto.jpg"</b>.
+  </div>
+</main>
+
+<div class="bottom">
+  <div class="bottomIn">
+    <div><b id="bottomCount">0 item</b><br><span id="bottomTotal">Rp0</span></div>
+    <button class="checkout" onclick="openCheckout()">Checkout →</button>
+  </div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeCheckout()">
+  <div class="sheet">
+    <button class="close" onclick="closeCheckout()">✕</button>
+    <h2 style="margin-top:0">🧾 Checkout</h2>
+
+    <div id="orderBox"></div>
+
+    <div class="field">
+      <label>Nama pembeli</label>
+      <input id="name" placeholder="Contoh: Amir">
+    </div>
+
+    <div class="field">
+      <label>Nomor WhatsApp yang bisa dihubungi</label>
+      <input id="phone" type="tel" placeholder="Contoh: 0895xxxxxxxx">
+    </div>
+
+    <div class="field">
+      <label>📍 Lokasi pembeli</label>
+      <div class="locRow">
+        <button class="locBtn" onclick="getLocation()">📍 Bagikan lokasi saya</button>
+      </div>
+      <div class="status" id="locStatus"></div>
+    </div>
+
+    <div class="field">
+      <label>🏠 Ancer-ancer rumah</label>
+      <textarea id="landmark" placeholder="Contoh: Rumah pagar hitam, dekat warung Pak Budi"></textarea>
+    </div>
+
+    <button class="wa" onclick="sendWhatsApp()">📲 Pesan via WhatsApp</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//             PANDUAN MENGEDIT WEBSITE
+// ============================================================
+// 1. Tambahkan foto ke folder: images/
+// 2. Foto resto:
+//       banner:"images/banner-gacoan.jpg"
+//       logo:"images/logo-gacoan.jpg"
+// 3. Foto menu:
+//       image:"images/mie-gacoan.jpg"
+// 4. Harga ditulis angka biasa:
+//       price:15000
+//
+// STRUKTUR:
+// RESTAURANTS
+//   └── resto
+//        ├── name
+//        ├── logo
+//        ├── banner
+//        └── products
+//              ├── name
+//              ├── desc
+//              ├── price
+//              ├── image
+//
+// ID MENU HARUS UNIK.
+// ============================================================
+
+const STORE_WA="6289612490808";
+// GANTI nomor di atas dengan WhatsApp toko Anda.
+// Format: 628xxxxxxxxxx, tanpa tanda + dan tanpa spasi.
+
+const RESTAURANTS=[
+  {
+    id:"gacoan",
+    name:"Resto Gacoan",
+    logo:"images/mie-gacoan.jpg",
+    banner:"",
+    emoji:"🍜",
+    products:[
+      {id:"gacoan-1",name:"Lumpia Udang",desc:"Renyah di luar, lembut di dalam dengan rasa udang",price:10000,image:"images/lumpia-udang.jpg",emoji:"🥟"},
+      {id:"gacoan-2",name:"Siomay",desc:"Perpaduan daging ayam dan udang, disajikan hangat",price:10000,image:"images/siomay.jpg",emoji:"🥟"},
+      {id:"gacoan-3",name:"Udang Keju",desc:"Lelehan keju lembut dalam adonan udang dan ayam",price:10000,image:"images/udang-keju.jpg",emoji:"🧀"},
+      {id:"gacoan-4",name:"Mie Gacoan",desc:"Mie pedas manis dengan tingkat kepedasan pilihan",price:10000,image:"images/mie-gacoan.jpg",emoji:"🍜",levels:[0,1,2,3,4]},
+      {id:"gacoan-5",name:"Mie Hompimpa",desc:"Mie pedas gurih untuk pecinta rasa pedas",price:10000,image:"images/mie-hompimpa.jpg",emoji:"🍜",levels:[1,2,3,4]},
+      {id:"gacoan-6",name:"Mie Suit",desc:"Mie gurih dan asin untuk yang tidak suka pedas",price:10000,image:"images/mie-suit.jpg",emoji:"🍜"},
+      {id:"gacoan-7",name:"Pangsit Goreng",desc:"Pangsit goreng renyah, cocok dimakan bersama mie",price:10000,image:"images/pangsit-goreng.jpg",emoji:"🥟"},
+      {id:"gacoan-8",name:"Es Gobak Sodor",desc:"Nata de coco, jelly, dan irisan strawberry",price:10000,image:"images/es-gobak-sodor.jpg",emoji:"🍹"},
+      {id:"gacoan-9",name:"Thai Tea",desc:"Teh Thailand manis dan creamy",price:10000,image:"images/thai-tea.jpg",emoji:"🧋"},
+      {id:"gacoan-10",name:"Thai Green Tea",desc:"Teh hijau Thailand manis dan creamy",price:10000,image:"images/thai-green-tea.jpg",emoji:"🍵"}
+    ]
+  },
+
+  {
+    id:"mixue",
+    name:"Resto Mixue",
+    logo:"images/blueberry-sundae.jpg",
+    banner:"",
+    emoji:"🍦",
+    products:[
+      {id:"mixue-1",name:"Blueberry Sundae",desc:"Es krim lembut dengan saus blueberry",price:11000,image:"images/blueberry-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-2",name:"Yellow Peach Sundae",desc:"Es krim lembut dengan topping peach kuning",price:11000,image:"images/yellow-peach-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-3",name:"Peach Sundae",desc:"Es krim lembut dengan topping peach",price:11000,image:"images/peach-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-4",name:"Kiwi Sundae",desc:"Es krim lembut dengan topping kiwi",price:11000,image:"images/kiwi-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-5",name:"Strawberry Lucky Sundae",desc:"Es krim dengan selai strawberry dan topping kejutan",price:11000,image:"images/strawberry-lucky-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-6",name:"Strawberry Sundae",desc:"Es krim lembut dengan saus strawberry",price:11000,image:"images/strawberry-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-7",name:"Chocolate Cookies Sundae",desc:"Es krim dengan remahan cookies cokelat",price:11000,image:"images/chocolate-cookies-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-8",name:"Boba Sundae",desc:"Es krim dengan boba kenyal dan saus cokelat",price:11000,image:"images/boba-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-9",name:"Mango Sundae",desc:"Es krim dengan potongan dan sirup mangga",price:11000,image:"images/mango-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-10",name:"Creamy Blueberry",desc:"Minuman creamy blueberry yang segar",price:11000,image:"images/creamy-blueberry.jpg",emoji:"🧋"},
+      {id:"mixue-11",name:"Milky Fruity Berry",desc:"Campuran strawberry dan susu dengan jelly",price:11000,image:"images/milky-fruity-berry.jpg",emoji:"🧋"},
+      {id:"mixue-12",name:"Milky Fruity Kiwi",desc:"Campuran kiwi dan susu dengan jelly peach",price:11000,image:"images/milky-fruity-kiwi.jpg",emoji:"🧋"},
+      {id:"mixue-13",name:"Blueberry Jasmine Tea",desc:"Teh melati dengan blueberry segar",price:11000,image:"images/blueberry-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-14",name:"Strawberry Peach Jasmine Tea",desc:"Teh melati dengan strawberry dan peach",price:11000,image:"images/strawberry-peach-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-15",name:"Peach Jasmine Tea",desc:"Teh melati wangi dengan irisan peach",price:11000,image:"images/peach-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-16",name:"Vitamin C Kiwi Tea",desc:"Teh kiwi segar dengan jelly kelapa",price:11000,image:"images/vitamin-c-kiwi-tea.jpg",emoji:"🍹"},
+      {id:"mixue-17",name:"Latte",desc:"Espresso halus dengan susu creamy",price:11000,image:"images/latte.jpg",emoji:"☕"}
+    ]
+  },
+
+  {
+    id:"bakso-mie-ayam",
+    name:"Resto Bakso & Mie Ayam",
+    logo:"images/bakso-campur.jpg",
+    banner:"",
+    emoji:"🍜",
+    products:[
+      {id:"bakso-1",name:"Bakso Campur",desc:"Bakso campur dengan pangsit dan tahu",price:12000,image:"images/bakso-campur.jpg",emoji:"🍲"},
+      {id:"bakso-2",name:"Bakso Beranak",desc:"Bakso isi pentol kecil dan telur puyuh",price:12000,image:"images/bakso-beranak.jpg",emoji:"🍲"},
+      {id:"bakso-3",name:"Bakso Jumbo",desc:"Bakso ukuran jumbo dengan kuah hangat",price:12000,image:"images/bakso-jumbo.jpg",emoji:"🍲"},
+      {id:"bakso-4",name:"Mie Ayam Ceker",desc:"Mie ayam dengan ceker empuk",price:12000,image:"images/mie-ayam-ceker.jpg",emoji:"🍜"},
+      {id:"bakso-5",name:"Mie Ayam",desc:"Mie ayam klasik dengan pangsit",price:12000,image:"images/mie-ayam.jpg",emoji:"🍜"},
+      {id:"bakso-6",name:"Mie Ayam Bakso",desc:"Mie ayam dengan tambahan bakso",price:12000,image:"images/mie-ayam-bakso.jpg",emoji:"🍜"}
+    ]
+  },
+
+  {
+    id:"nasi-ayam-rempah-probolinggo",
+    name:"Resto Nasi Ayam Rempah Probolinggo",
+    logo:"images/nasi-ayam-rempah.jpg",
+    banner:"",
+    emoji:"🍗",
+    products:[
+      {id:"nar-1",name:"Nasi Lele Rempah",desc:"Nasi, lele goreng rempah, tempe, terong, lalapan dan sambal",price:14000,image:"images/nasi-lele-rempah.jpg",emoji:"🐟"},
+      {id:"nar-2",name:"Nasi Rempelo Ati Rempah",desc:"Nasi, rempelo ati, tempe, terong, lalapan dan sambal",price:14000,image:"images/nasi-rempelo-ati-rempah.jpg",emoji:"🍗"},
+      {id:"nar-3",name:"Nasi Usus Rempah",desc:"Nasi, usus goreng, tempe, terong, lalapan dan sambal",price:14000,image:"images/nasi-usus-rempah.jpg",emoji:"🍚"},
+      {id:"nar-4",name:"Nasi Ayam Rempah",desc:"Nasi, ayam goreng rempah, tempe, terong, lalapan dan sambal",price:14000,image:"images/nasi-ayam-rempah.jpg",emoji:"🍗"},
+      {id:"nar-5",name:"Nasi 4T Rempah",desc:"Nasi, tahu, tempe, telur, terong dan serundeng",price:14000,image:"images/nasi-4t-rempah.jpg",emoji:"🍚"},
+      {id:"nar-6",name:"Nasi Kulit Goreng Rempah",desc:"Nasi, kulit goreng/bakar, tahu, terong, lalapan dan sambal",price:14000,image:"images/nasi-kulit-rempah.jpg",emoji:"🍚"}
+    ]
+  }
+];
+
+const products=RESTAURANTS.flatMap(r=>r.products);
+let cart={}, locationLink="", plusCode="";
+
+const rupiah=n=>new Intl.NumberFormat("id-ID",{
+  style:"currency",
+  currency:"IDR",
+  maximumFractionDigits:0
+}).format(n);
+
+function imageOrEmoji(src,emoji){
+  return src
+    ? `<img src="${src}" alt="" onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<span>${emoji}</span>')">`
+    : emoji;
+}
+
+function render(){
+  const el=document.getElementById("products");
+
+  el.innerHTML=RESTAURANTS.map(r=>`
+    <section class="restaurantSection">
+
+      <div class="restaurantHeader">
+        <div class="restaurantIcon">
+          ${imageOrEmoji(r.logo,r.emoji)}
+        </div>
+        <div>
+          <h2>${r.name}</h2>
+          <span>${r.products.length} pilihan menu</span>
+        </div>
+      </div>
+
+      ${r.banner ? `
+        <img class="restaurantBanner"
+             src="${r.banner}"
+             alt="${r.name}"
+             onerror="this.style.display='none'">
+      ` : ""}
+
+      <div class="grid">
+        ${r.products.map(p=>`
+          <div class="card">
+
+            <div class="photo">
+              ${imageOrEmoji(p.image,p.emoji)}
+            </div>
+
+            <div class="body">
+              <h3>${p.name}</h3>
+              <div class="desc">${p.desc}</div>
+              <div class="price">${rupiah(p.price)}</div>
+              ${p.levels ? `
+                <div class="field" style="margin:10px 0">
+                  <label style="font-size:13px">Pilih Level</label>
+                  <select id="level-${p.id}" style="width:100%;padding:11px;border:1px solid #ddd;border-radius:12px;font:inherit">
+                    ${p.levels.map(l=>`<option value="${l}">Level ${l}</option>`).join("")}
+                  </select>
+                </div>
+              ` : ""}
+              <button class="add" onclick="add('${p.id}'${p.levels ? `,document.getElementById('level-${p.id}').value` : ""})">
+                + Tambah
+              </button>
+            </div>
+
+          </div>
+        `).join("")}
+      </div>
+
+    </section>
+  `).join("");
+
+  updateCart();
+}
+
+function add(id,level=""){
+  const key=level ? `${id}|${level}` : id;
+  cart[key]=(cart[key]||0)+1;
+  updateCart();
+  const p=products.find(x=>x.id===id);
+  showToast(`${p ? p.name : "Menu"}${level ? ` (Level ${level})` : ""} ditambahkan ✓`);
+}
+
+function showToast(message){
+  const t=document.getElementById("toast");
+  t.textContent=message;
+  t.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>t.classList.remove("show"),1800);
+}
+
+function changeQty(key,delta){
+  cart[key]=(cart[key]||0)+delta;
+  if(cart[key]<=0) delete cart[key];
+  updateCart();
+  openCheckout();
+}
+
+function removeItem(key){
+  delete cart[key];
+  updateCart();
+  if(getCartItems().length) openCheckout();
+  else closeCheckout();
+}
+
+function updateCart(){
+  let count=0,total=0;
+
+  Object.entries(cart).forEach(([key,qty])=>{
+    if(!qty) return;
+    const [id]=key.split("|");
+    const p=products.find(x=>x.id===id);
+    if(p){ count+=qty; total+=qty*p.price; }
+  });
+
+  document.getElementById("count").textContent=count;
+  document.getElementById("bottomCount").textContent=count+" item";
+  document.getElementById("bottomTotal").textContent=rupiah(total);
+}
+
+function getCartItems(){
+  return Object.entries(cart).filter(([,qty])=>qty).map(([key,qty])=>{
+    const [id,level]=key.split("|");
+    const p=products.find(x=>x.id===id);
+    return {p,level,qty};
+  }).filter(x=>x.p);
+}
+
+function openCheckout(){
+  const items=getCartItems();
+  if(!items.length){
+    alert("Keranjang masih kosong.");
+    return;
+  }
+
+  const lines=items.map(({p,level,qty})=>{
+    const key=level ? `${p.id}|${level}` : p.id;
+    return `
+      <div class="orderLine" style="align-items:center">
+        <span>${p.name}${level ? ` (Level ${level})` : ""}</span>
+        <b>${rupiah(p.price*qty)}</b>
+      </div>
+      <div class="editRow">
+        <button class="qtyBtn" onclick="changeQty('${key}',-1)">−</button>
+        <b>${qty}</b>
+        <button class="qtyBtn" onclick="changeQty('${key}',1)">+</button>
+        <button class="removeBtn" onclick="removeItem('${key}')">Hapus</button>
+      </div>
+    `;
+  }).join("");
+
+  const total=items.reduce((s,{p,qty})=>s+qty*p.price,0);
+
+  document.getElementById("orderBox").innerHTML=`
+    <div class="order">
+      ${lines}
+      <div class="total">Total: ${rupiah(total)}</div>
+    </div>
+  `;
+
+  document.getElementById("modal").classList.add("show");
+}
+
+function closeCheckout(){
+  document.getElementById("modal").classList.remove("show");
+}
+
+function toPlusCode(lat,lng){
+  // Plus Code (Open Location Code) 10 digit, contoh: 6P5XXXXX+XX
+  const A="23456789CFGHJMPQRVWX";
+  lat=Math.min(Math.max(lat,-90),90)+90;
+  lng=((lng+180)%360+360)%360;
+  if(lat>=180) lat=180-1/16000;
+  let la=Math.floor(Math.round(lat*8000*1e6)/1e6);
+  let lo=Math.floor(Math.round(lng*8000*1e6)/1e6);
+  let pairs=[];
+  for(let i=0;i<5;i++){
+    pairs.unshift(A[la%20]+A[lo%20]);
+    la=Math.floor(la/20); lo=Math.floor(lo/20);
+  }
+  const c=pairs.join("");
+  return c.slice(0,8)+"+"+c.slice(8);
+}
+
+function getLocation(){
+  const s=document.getElementById("locStatus");
+
+  if(!navigator.geolocation){
+    s.textContent="Browser tidak mendukung GPS.";
+    return;
+  }
+
+  s.textContent="Meminta izin lokasi...";
+
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      const latitude=pos.coords.latitude;
+      const longitude=pos.coords.longitude;
+
+      locationLink=
+        `https://www.google.com/maps?q=${latitude},${longitude}`;
+      plusCode=toPlusCode(latitude,longitude);
+
+      s.textContent=
+        "✅ Lokasi berhasil diambil. Plus Code: "+plusCode;
+    },
+    ()=>{
+      s.textContent=
+        "❌ Lokasi tidak bisa diambil. Aktifkan izin lokasi browser.";
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:10000
+    }
+  );
+}
+
+function sendWhatsApp(){
+
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const landmark=document.getElementById("landmark").value.trim();
+
+  if(!name || !phone){
+    alert("Nama dan nomor WhatsApp wajib diisi.");
+    return;
+  }
+
+  const items=getCartItems();
+  let total=0;
+  let message="Pesanan:\n\n";
+
+  items.forEach(({p,level,qty})=>{
+    const sub=p.price*qty;
+    total+=sub;
+    message+=`${p.name}${level ? ` (Level ${level})` : ""} × ${qty} = ${rupiah(sub)}\n`;
+  });
+
+  message+=`\nTotal: ${rupiah(total)}\n\n`;
+  message+=plusCode ? `Plus Code Google Maps: ${plusCode}\n\n` : `Plus Code Google Maps: Lokasi belum tersedia\n\n`;
+  message+=`Nama: ${name}\n`+
+    `WhatsApp: ${phone}\n`+
+    `Ancer-ancer: ${landmark || "-"}`;
+
+  message=encodeURIComponent(message);
+
+  window.open(
+    `https://wa.me/${STORE_WA}?text=${message}`,
+    "_blank"
+  );
+}
+
+render();
+</script>
+</body>
+</html>
