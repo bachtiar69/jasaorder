@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JASTIP JEMBER - Coming Soon</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f7f8;color:#171717}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid #eee}
+.nav{max-width:1100px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:21px;font-weight:800}.brand span{color:#f97316}
+.hero{max-width:1100px;margin:20px auto;padding:0 18px}
+.heroBox{background:linear-gradient(135deg,#171717,#333);color:white;border-radius:24px;padding:30px 24px;display:flex;justify-content:space-between;gap:20px;align-items:center;overflow:hidden}
+.hero h1{font-size:clamp(30px,6vw,52px);line-height:1;margin:0 0 12px}
+.hero p{color:#ddd;margin:0 0 18px}
+.badge{display:inline-block;background:#f97316;padding:7px 12px;border-radius:999px;font-weight:800;font-size:13px;margin-bottom:14px}
+.heroEmoji{font-size:100px;filter:drop-shadow(0 15px 15px #0008)}
+.wrap{max-width:1100px;margin:auto;padding:0 18px 40px}
+.panel{background:white;border:1px solid #eee;border-radius:20px;padding:22px;box-shadow:0 5px 20px #00000008}
+.panel h2{margin:0 0 8px}.panel p{color:#777;margin:0 0 18px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;text-decoration:none;font-weight:800;border-radius:13px;padding:13px 20px;font-size:15px}
+.btn.main{background:#f97316;color:#fff}
+.btn.alt{background:#171717;color:#fff}
+.btn.ghost{background:#eee;color:#171717}
+@media(max-width:560px){.heroEmoji{font-size:64px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">🍴 <span>JASTIP</span> JEMBER</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="heroBox">
+    <div>
+      <span class="badge">COMING SOON</span>
+      <h1>Jember<br>Segera Hadir.</h1>
+      <p>Layanan jastip untuk Jember sedang kami siapkan. Tunggu kabar selanjutnya ya!</p>
+    </div>
+    <div class="heroEmoji">⏳</div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="panel">
+    <h2>Sementara itu, pesan di kota lain</h2>
+    <p>Kamu bisa memesan di kota yang sudah tersedia atau kembali memilih kota.</p>
+    <div class="btns">
+      <a class="btn main" href="index.html?kota=probolinggo">🍗 Pesan di Probolinggo</a>
+      <a class="btn alt" href="indexmlg.html">🍜 Pesan di Malang</a>
+      <a class="btn ghost" href="index.html?pilih=1">📍 Pilih kota</a>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

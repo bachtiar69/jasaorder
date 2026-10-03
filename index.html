@@ -47,16 +47,120 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdro
 .wa{width:100%;border:0;background:#16a34a;color:white;border-radius:13px;padding:15px;font-size:16px;font-weight:900;cursor:pointer}
 .guide{margin-top:28px;padding:16px;background:#fff;border:1px dashed #ddd;border-radius:16px;color:#555;font-size:13px}
 @media(max-width:600px){.heroBox{padding:24px 20px}.heroEmoji{font-size:70px}.restaurantBanner{height:130px}.photo{height:160px}}
+
+/* ===== Pilih Kota ===== */
+.kotaOverlay{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#171717,#2d2d2d);display:none;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.kotaOverlay.show{display:flex}
+body.locked{overflow:hidden}
+.kotaBox{width:min(520px,100%);color:#fff;text-align:center;margin:auto}
+.kotaBrand{font-size:24px;font-weight:800}.kotaBrand span{color:#f97316}
+.kotaBox h1{font-size:clamp(28px,7vw,38px);margin:16px 0 6px;line-height:1.1}
+.kotaBox p{color:#ccc;margin:0 0 22px}
+.kotaList{display:grid;gap:12px}
+.kotaCard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2px solid #ffffff24;background:#ffffff10;color:#fff;border-radius:20px;padding:15px;font:inherit;cursor:pointer;transition:.15s}
+.kotaCard:hover{background:#ffffff1d}.kotaCard:active{transform:scale(.98)}
+.kotaCard.main{background:#f97316;border-color:#f97316}.kotaCard.main:hover{background:#ea6a0c}
+.kotaEmoji{font-size:32px;flex:none;width:54px;height:54px;display:grid;place-items:center;background:#ffffff26;border-radius:16px}
+.kotaCard b{display:block;font-size:19px}
+.kotaCard small{display:block;color:#ffffffc0;font-size:13px;margin-top:2px}
+.kotaTag{margin-left:auto;flex:none;background:#fff;color:#171717;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.kotaCard.soon .kotaTag{background:#facc15}
+.cityLink{display:inline-block;margin-top:14px;border:1px solid #ffffff4d;background:#ffffff14;color:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
+.cityLink:hover{background:#ffffff26}
+
+/* ===== Pemilih Kota (pojok kiri atas) ===== */
+.navLeft{display:flex;align-items:center;gap:12px;min-width:0}
+.cityPick{position:relative;flex:none}
+.cityBtn{border:1px solid #e5e5e5;background:#fff;border-radius:999px;padding:9px 13px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;color:#171717}
+.cityBtn:hover{background:#f5f5f5}
+.cityBtn .arr{font-size:10px;transition:.15s}.cityPick.open .arr{transform:rotate(180deg)}
+.cityMenu{display:none;position:absolute;top:calc(100% + 8px);left:0;min-width:210px;background:#fff;border:1px solid #eee;border-radius:16px;box-shadow:0 12px 30px #00000026;padding:6px;z-index:50}
+.cityPick.open .cityMenu{display:block}
+.cityMenu a{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;color:#171717;text-decoration:none;font-weight:700;font-size:14px}
+.cityMenu a:hover{background:#f5f5f5}
+.cityMenu a.active{background:#fff0df;color:#c2410c}
+.cityMenu small{margin-left:auto;font-size:10px;font-weight:800;background:#facc15;color:#171717;padding:3px 7px;border-radius:999px;white-space:nowrap}
+@media(max-width:600px){.nav{padding:12px}.navLeft{gap:8px}.navLeft .brand{font-size:15px}.cityBtn{padding:8px 10px;font-size:12px}.cart{padding:10px 12px;font-size:13px}}
 </style>
 </head>
 <body>
 
+<div class="kotaOverlay show" id="kotaOverlay" role="dialog" aria-modal="true" aria-labelledby="kotaJudul">
+  <div class="kotaBox">
+    <div class="kotaBrand">🍴 <span>JASTIP</span> BAHCTIAR</div>
+    <h1 id="kotaJudul">Pilih kota kamu</h1>
+    <p>Pilih kota tempat kamu ingin memesan.</p>
+    <div class="kotaList">
+      <button class="kotaCard main" onclick="pilihKota('probolinggo')">
+        <span class="kotaEmoji">🍗</span>
+        <span><b>Probolinggo</b><small>Kota utama · pesan sekarang</small></span>
+        <span class="kotaTag">UTAMA</span>
+      </button>
+      <button class="kotaCard" onclick="pilihKota('malang')">
+        <span class="kotaEmoji">🍜</span>
+        <span><b>Malang</b><small>Jajanan Malang siap diantar</small></span>
+        <span class="kotaTag">BUKA</span>
+      </button>
+      <button class="kotaCard soon" onclick="pilihKota('jember')">
+        <span class="kotaEmoji">⏳</span>
+        <span><b>Jember</b><small>Sedang disiapkan</small></span>
+        <span class="kotaTag">SEGERA HADIR</span>
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var ov=document.getElementById('kotaOverlay');
+  var qs=new URLSearchParams(location.search), s=null;
+  try{s=sessionStorage.getItem('kota')}catch(e){}
+  if(qs.get('kota')==='probolinggo'){ try{sessionStorage.setItem('kota','probolinggo')}catch(e){} s='probolinggo'; qs.delete('pilih'); }
+  if(s==='probolinggo' && !qs.has('pilih')){ ov.classList.remove('show'); }
+  else { document.body.classList.add('locked'); }
+})();
+function pilihKota(k){
+  try{ k==='probolinggo' ? sessionStorage.setItem('kota','probolinggo') : sessionStorage.removeItem('kota'); }catch(e){}
+  if(k==='malang'){ location.href='indexmlg.html'; return; }
+  if(k==='jember'){ location.href='indexjember.html'; return; }
+  document.getElementById('kotaOverlay').classList.remove('show');
+  document.body.classList.remove('locked');
+  try{ history.replaceState(null,'','index.html'); }catch(e){}
+  window.scrollTo(0,0);
+}
+function bukaPilihKota(){
+  document.getElementById('kotaOverlay').classList.add('show');
+  document.body.classList.add('locked');
+}
+</script>
+
+
 <header>
   <div class="nav">
+    <div class="navLeft">
+    <div class="cityPick" id="cityPick">
+      <button class="cityBtn" type="button" onclick="toggleCityMenu(event)" aria-haspopup="true">📍 Probolinggo <span class="arr">▼</span></button>
+      <div class="cityMenu" role="menu">
+        <a href="index.html?kota=probolinggo" class="active" onclick="toggleCityMenu(event,true)">📍 Probolinggo</a>
+        <a href="indexmlg.html">📍 Malang</a>
+        <a href="indexjember.html">📍 Jember<small>SEGERA</small></a>
+      </div>
+    </div>
     <div class="brand">🍴 <span>JASTIP</span> BAHCTIAR</div>
+  </div>
     <button class="cart" onclick="openCheckout()">🛒 Keranjang (<span id="count">0</span>)</button>
   </div>
 </header>
+<script>
+function toggleCityMenu(e,forceClose){
+  var p=document.getElementById('cityPick');
+  if(forceClose){ p.classList.remove('open'); if(e) e.preventDefault(); return; }
+  e.stopPropagation(); p.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var p=document.getElementById('cityPick');
+  if(p && !p.contains(e.target)) p.classList.remove('open');
+});
+</script>
 <div class="toast" id="toast"></div>
 
 <section class="hero">
@@ -65,6 +169,7 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdro
       <span class="badge">PROMO HARI INI</span>
       <h1>Pesan makanan<br>jadi lebih mudah.</h1>
       <p>Pilih restoran, pilih menu, checkout, lalu langsung WhatsApp.</p>
+      <button class="cityLink" onclick="bukaPilihKota()">📍 Kota: Probolinggo · Ganti kota</button>
     </div>
     <div class="heroEmoji">🍗</div>
   </div>
@@ -78,6 +183,13 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdro
 
   <div id="products"></div>
 
+  <div class="guide">
+    <b>🛠️  EDIT:</b><br><br>
+    Cari <b>const RESTAURANTS=[</b> di kode. Di sana Anda bisa menambah restoran,
+    banner, logo, dan foto setiap menu.<br><br>
+    Foto menu bisa diletakkan di folder <b>images/</b>, lalu isi:
+    <b>image:"images/nama-foto.jpg"</b>.
+  </div>
 </main>
 
 <div class="bottom">
