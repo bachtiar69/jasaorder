@@ -64,7 +64,6 @@ body.locked{overflow:hidden}
 .kotaCard b{display:block;font-size:19px}
 .kotaCard small{display:block;color:#ffffffc0;font-size:13px;margin-top:2px}
 .kotaTag{margin-left:auto;flex:none;background:#fff;color:#171717;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;white-space:nowrap}
-.kotaCard.soon .kotaTag{background:#facc15}
 .cityLink{display:inline-block;margin-top:14px;border:1px solid #ffffff4d;background:#ffffff14;color:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
 .cityLink:hover{background:#ffffff26}
 
@@ -93,7 +92,7 @@ body.locked{overflow:hidden}
       <div class="cityMenu" role="menu">
         <a href="index.html?kota=probolinggo">📍 Probolinggo</a>
         <a href="indexmlg.html" class="active" onclick="toggleCityMenu(event,true)">📍 Malang</a>
-        <a href="indexjember.html">📍 Jember<small>SEGERA</small></a>
+        <a href="indexjember.html">📍 Jember</a>
       </div>
     </div>
     <div class="brand">🍴 <span>JASTIP</span> MALANG</div>
@@ -195,8 +194,8 @@ const RESTAURANTS = [
     products: [
       { id: "dikichi-1", name: "Crispy Original", desc: "Ayam crispy gurih, renyah di luar & juicy di dalam. Tidak pedas, cocok untuk semua.", price: 0, image: "gambar-mlg/dikichi-crispy-original.jpg", emoji: "🍗" },
       { id: "dikichi-2", name: "Crispy Hot", desc: "Ayam crispy renyah di luar & juicy di dalam. Cocok untuk pecinta rasa gurih & pedas.", price: 0, image: "gambar-mlg/dikichi-crispy-hot.jpg", emoji: "🍗" },
-      { id: "dikichi-3", name: "Sundae", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Chocolate, Oreo, Strawberry.", price: 0, image: "gambar-mlg/dikichi-sundae.jpg", emoji: "🍨" },
-      { id: "dikichi-4", name: "Twizzy", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Hokkaido Matcha, Red Velvet, Silky Ube.", price: 0, image: "gambar-mlg/dikichi-twizzy.jpg", emoji: "🍦" }
+      { id: "dikichi-3", name: "Sundae", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Chocolate, Oreo, Strawberry.", price: 0, image: "gambar-mlg/dikichi-sundae.jpg", emoji: "🍨", variants: ["Coklat", "Oreo", "Strawberry"] },
+      { id: "dikichi-4", name: "Twizzy", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Hokkaido Matcha, Red Velvet, Silky Ube.", price: 0, image: "gambar-mlg/dikichi-twizzy.jpg", emoji: "🍦", variants: ["Matcha", "Ube", "Red Velvet"] }
     ]
   },
   {
@@ -399,6 +398,12 @@ const rupiah = n => new Intl.NumberFormat("id-ID", {
   maximumFractionDigits: 0
 }).format(n);
 
+// Label pilihan: "Level 2" untuk level pedas, atau nama varian (mis. "Oreo")
+function optLabel(p, v) {
+  if (!v) return "";
+  return p.levels ? ` (Level ${v})` : ` (${v})`;
+}
+
 function imageOrEmoji(src, emoji) {
   return src
     ? `<img src="${src}" alt="" onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<span>${emoji}</span>')">`
@@ -440,15 +445,17 @@ function render() {
               <h3>${p.name}</h3>
               <div class="desc">${p.desc}</div>
               <div class="price">${rupiah(p.price)}</div>
-              ${p.levels ? `
+              ${(p.levels || p.variants) ? `
                 <div class="field" style="margin:10px 0">
-                  <label style="font-size:13px">Pilih Level Pedas</label>
+                  <label style="font-size:13px">${p.levels ? "Pilih Level Pedas" : "Pilih Varian"}</label>
                   <select id="level-${p.id}" style="width:100%;padding:11px;border:1px solid #ddd;border-radius:12px;font:inherit">
-                    ${p.levels.map(l => `<option value="${l}">Level ${l}</option>`).join("")}
+                    ${p.levels
+                      ? p.levels.map(l => `<option value="${l}">Level ${l}</option>`).join("")
+                      : p.variants.map(v => `<option value="${v}">${v}</option>`).join("")}
                   </select>
                 </div>
               ` : ""}
-              <button class="add" onclick="add('${p.id}'${p.levels ? `,document.getElementById('level-${p.id}').value` : ""})">
+              <button class="add" onclick="add('${p.id}'${(p.levels || p.variants) ? `,document.getElementById('level-${p.id}').value` : ""})">
                 + Tambah
               </button>
             </div>
@@ -468,7 +475,7 @@ function add(id, level = "") {
   cart[key] = (cart[key] || 0) + 1;
   updateCart();
   const p = products.find(x => x.id === id);
-  showToast(`${p ? p.name : "Menu"}${level ? ` (Level ${level})` : ""} ditambahkan ✓`);
+  showToast(`${p ? p.name : "Menu"}${optLabel(p, level)} ditambahkan ✓`);
 }
 
 function showToast(message) {
@@ -527,7 +534,7 @@ function openCheckout() {
     const key = level ? `${p.id}|${level}` : p.id;
     return `
       <div class="orderLine" style="align-items:center">
-        <span>${p.name}${level ? ` (Level ${level})` : ""}</span>
+        <span>${p.name}${optLabel(p, level)}</span>
         <b>${rupiah(p.price * qty)}</b>
       </div>
       <div class="editRow">
@@ -624,7 +631,7 @@ function sendWhatsApp(){
     group.forEach(({p,level,qty})=>{
       const sub=p.price*qty;
       subtotal+=sub;
-      message+=`• ${p.name}${level ? ` (Level ${level})` : ""} × ${qty} = ${rupiah(sub)}\n`;
+      message+=`• ${p.name}${optLabel(p, level)} × ${qty} = ${rupiah(sub)}\n`;
     });
     message+=`_Subtotal: ${rupiah(subtotal)}_\n\n`;
     total+=subtotal;

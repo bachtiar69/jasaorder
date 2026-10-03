@@ -3,60 +3,466 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JASTIP JEMBER - Coming Soon</title>
+<title>JASTIP JEMBER</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f7f8;color:#171717}
 header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid #eee}
 .nav{max-width:1100px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
 .brand{font-size:21px;font-weight:800}.brand span{color:#f97316}
+.cart{border:0;background:#171717;color:white;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer}
 .hero{max-width:1100px;margin:20px auto;padding:0 18px}
 .heroBox{background:linear-gradient(135deg,#171717,#333);color:white;border-radius:24px;padding:30px 24px;display:flex;justify-content:space-between;gap:20px;align-items:center;overflow:hidden}
 .hero h1{font-size:clamp(30px,6vw,52px);line-height:1;margin:0 0 12px}
-.hero p{color:#ddd;margin:0 0 18px}
-.badge{display:inline-block;background:#f97316;padding:7px 12px;border-radius:999px;font-weight:800;font-size:13px;margin-bottom:14px}
+.hero p{color:#ddd;margin:0 0 18px}.badge{display:inline-block;background:#f97316;padding:7px 12px;border-radius:999px;font-weight:800;font-size:13px}
 .heroEmoji{font-size:100px;filter:drop-shadow(0 15px 15px #0008)}
-.wrap{max-width:1100px;margin:auto;padding:0 18px 40px}
-.panel{background:white;border:1px solid #eee;border-radius:20px;padding:22px;box-shadow:0 5px 20px #00000008}
-.panel h2{margin:0 0 8px}.panel p{color:#777;margin:0 0 18px}
-.btns{display:flex;flex-wrap:wrap;gap:12px}
-.btn{display:inline-block;text-decoration:none;font-weight:800;border-radius:13px;padding:13px 20px;font-size:15px}
-.btn.main{background:#f97316;color:#fff}
-.btn.alt{background:#171717;color:#fff}
-.btn.ghost{background:#eee;color:#171717}
-@media(max-width:560px){.heroEmoji{font-size:64px}}
+.wrap{max-width:1100px;margin:auto;padding:0 18px 110px}
+.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:28px 0 14px}.sectionTitle h2{margin:0}
+.restaurantSection{margin:34px 0}.restaurantHeader{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.restaurantIcon{width:50px;height:50px;border-radius:15px;overflow:hidden;background:#fff0df;display:grid;place-items:center;font-size:27px;flex:none}
+.restaurantIcon img{width:100%;height:100%;object-fit:cover}
+.restaurantHeader h2{margin:0 0 3px;font-size:22px}.restaurantHeader span{font-size:13px;color:#777}
+.restaurantBanner{width:100%;height:170px;object-fit:cover;border-radius:20px;margin-bottom:14px;background:#eee;display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:white;border:1px solid #eee;border-radius:20px;overflow:hidden;box-shadow:0 5px 20px #00000008}
+.photo{height:180px;background:#fff0df;overflow:hidden;display:grid;place-items:center;font-size:72px}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.body{padding:16px}.body h3{margin:0 0 6px}.desc{color:#777;font-size:14px;min-height:40px}
+.price{font-weight:900;font-size:19px;margin:12px 0}
+.add{width:100%;border:0;background:#f97316;color:white;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}
+.add:active{transform:scale(.98)}
+.toast{position:fixed;top:78px;left:50%;transform:translateX(-50%) translateY(-20px);background:#171717;color:#fff;padding:12px 18px;border-radius:999px;font-weight:800;z-index:60;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.editRow{display:flex;align-items:center;gap:8px;margin-top:8px}.qtyBtn{border:0;background:#eee;border-radius:999px;width:32px;height:32px;font-size:18px;font-weight:900;cursor:pointer}.removeBtn{margin-left:auto;border:0;background:#fee2e2;color:#b91c1c;border-radius:9px;padding:7px 10px;font-weight:800;cursor:pointer}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #eee;padding:12px 18px;z-index:20}
+.bottomIn{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.checkout{border:0;background:#16a34a;color:white;padding:13px 20px;border-radius:13px;font-weight:900;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:30;padding:14px;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}.sheet{background:#fff;width:min(650px,100%);max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:22px}
+.close{float:right;border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer}
+.field{margin:14px 0}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:7px}
+.field input,.field textarea{width:100%;padding:12px 13px;border:1px solid #ddd;border-radius:12px;font:inherit}
+.field textarea{min-height:75px;resize:vertical}.locRow{display:flex;gap:8px}.locBtn{border:0;background:#111;color:#fff;border-radius:12px;padding:12px;font-weight:800;cursor:pointer}
+.status{font-size:13px;margin-top:7px;color:#16a34a}.order{background:#f7f7f7;border-radius:14px;padding:12px;margin:16px 0}
+.orderLine{display:flex;justify-content:space-between;margin:7px 0;gap:10px}.total{font-size:20px;font-weight:900;border-top:1px solid #ddd;padding-top:10px;margin-top:10px}
+.wa{width:100%;border:0;background:#16a34a;color:white;border-radius:13px;padding:15px;font-size:16px;font-weight:900;cursor:pointer}
+.guide{margin-top:28px;padding:16px;background:#fff;border:1px dashed #ddd;border-radius:16px;color:#555;font-size:13px}
+@media(max-width:600px){.heroBox{padding:24px 20px}.heroEmoji{font-size:70px}.restaurantBanner{height:130px}.photo{height:160px}}
+
+/* ===== Pilih Kota ===== */
+.kotaOverlay{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#171717,#2d2d2d);display:none;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.kotaOverlay.show{display:flex}
+body.locked{overflow:hidden}
+.kotaBox{width:min(520px,100%);color:#fff;text-align:center;margin:auto}
+.kotaBrand{font-size:24px;font-weight:800}.kotaBrand span{color:#f97316}
+.kotaBox h1{font-size:clamp(28px,7vw,38px);margin:16px 0 6px;line-height:1.1}
+.kotaBox p{color:#ccc;margin:0 0 22px}
+.kotaList{display:grid;gap:12px}
+.kotaCard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2px solid #ffffff24;background:#ffffff10;color:#fff;border-radius:20px;padding:15px;font:inherit;cursor:pointer;transition:.15s}
+.kotaCard:hover{background:#ffffff1d}.kotaCard:active{transform:scale(.98)}
+.kotaCard.main{background:#f97316;border-color:#f97316}.kotaCard.main:hover{background:#ea6a0c}
+.kotaEmoji{font-size:32px;flex:none;width:54px;height:54px;display:grid;place-items:center;background:#ffffff26;border-radius:16px}
+.kotaCard b{display:block;font-size:19px}
+.kotaCard small{display:block;color:#ffffffc0;font-size:13px;margin-top:2px}
+.kotaTag{margin-left:auto;flex:none;background:#fff;color:#171717;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.cityLink{display:inline-block;margin-top:14px;border:1px solid #ffffff4d;background:#ffffff14;color:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
+.cityLink:hover{background:#ffffff26}
+
+/* ===== Pemilih Kota (pojok kiri atas) ===== */
+.navLeft{display:flex;align-items:center;gap:12px;min-width:0}
+.cityPick{position:relative;flex:none}
+.cityBtn{border:1px solid #e5e5e5;background:#fff;border-radius:999px;padding:9px 13px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;color:#171717}
+.cityBtn:hover{background:#f5f5f5}
+.cityBtn .arr{font-size:10px;transition:.15s}.cityPick.open .arr{transform:rotate(180deg)}
+.cityMenu{display:none;position:absolute;top:calc(100% + 8px);left:0;min-width:210px;background:#fff;border:1px solid #eee;border-radius:16px;box-shadow:0 12px 30px #00000026;padding:6px;z-index:50}
+.cityPick.open .cityMenu{display:block}
+.cityMenu a{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;color:#171717;text-decoration:none;font-weight:700;font-size:14px}
+.cityMenu a:hover{background:#f5f5f5}
+.cityMenu a.active{background:#fff0df;color:#c2410c}
+.cityMenu small{margin-left:auto;font-size:10px;font-weight:800;background:#facc15;color:#171717;padding:3px 7px;border-radius:999px;white-space:nowrap}
+@media(max-width:600px){.nav{padding:12px}.navLeft{gap:8px}.navLeft .brand{font-size:15px}.cityBtn{padding:8px 10px;font-size:12px}.cart{padding:10px 12px;font-size:13px}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="nav">
+    <div class="navLeft">
+    <div class="cityPick" id="cityPick">
+      <button class="cityBtn" type="button" onclick="toggleCityMenu(event)" aria-haspopup="true">📍 Jember <span class="arr">▼</span></button>
+      <div class="cityMenu" role="menu">
+        <a href="index.html?kota=probolinggo">📍 Probolinggo</a>
+        <a href="indexmlg.html">📍 Malang</a>
+        <a href="indexjember.html" class="active" onclick="toggleCityMenu(event,true)">📍 Jember</a>
+      </div>
+    </div>
     <div class="brand">🍴 <span>JASTIP</span> JEMBER</div>
   </div>
+    <button class="cart" onclick="openCheckout()">🛒 Keranjang (<span id="count">0</span>)</button>
+  </div>
 </header>
+<script>
+function toggleCityMenu(e,forceClose){
+  var p=document.getElementById('cityPick');
+  if(forceClose){ p.classList.remove('open'); if(e) e.preventDefault(); return; }
+  e.stopPropagation(); p.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var p=document.getElementById('cityPick');
+  if(p && !p.contains(e.target)) p.classList.remove('open');
+});
+</script>
+<div class="toast" id="toast"></div>
 
 <section class="hero">
   <div class="heroBox">
     <div>
-      <span class="badge">COMING SOON</span>
-      <h1>Jember<br>Segera Hadir.</h1>
-      <p>Layanan jastip untuk Jember sedang kami siapkan. Tunggu kabar selanjutnya ya!</p>
+      <span class="badge">JASTIP JEMBER</span>
+      <h1>Jajanan Jember<br>Siap Diantar.</h1>
+      <p>Pilih restoran favorit di Jember, pilih menu, checkout, lalu pesan via WhatsApp.</p>
+      <a class="cityLink" href="index.html?pilih=1">📍 Kota: Jember · Ganti kota</a>
     </div>
-    <div class="heroEmoji">⏳</div>
+    <div class="heroEmoji">🍜</div>
   </div>
 </section>
 
 <main class="wrap">
-  <div class="panel">
-    <h2>Sementara itu, pesan di kota lain</h2>
-    <p>Kamu bisa memesan di kota yang sudah tersedia atau kembali memilih kota.</p>
-    <div class="btns">
-      <a class="btn main" href="index.html?kota=probolinggo">🍗 Pesan di Probolinggo</a>
-      <a class="btn alt" href="indexmlg.html">🍜 Pesan di Malang</a>
-      <a class="btn ghost" href="index.html?pilih=1">📍 Pilih kota</a>
-    </div>
+  <div class="sectionTitle">
+    <h2>🍽️ Pilih Restoran Jember</h2>
+    <span style="color:#777">Daftar Resto Pilihan</span>
+  </div>
+
+  <div id="products"></div>
+
+  <div class="guide">
+    <b>🛠️ PANDUAN PENGGUNAAN:</b><br><br>
+    Anda dapat mengganti nomor WhatsApp toko pada variabel <b>STORE_WA</b> di bagian bawah script.<br>
+    Untuk menambah foto, letakkan file gambar di folder <b>images/</b> lalu sesuaikan path pada variabel <b>RESTAURANTS</b>.
   </div>
 </main>
 
+<div class="bottom">
+  <div class="bottomIn">
+    <div><b id="bottomCount">0 item</b><br><span id="bottomTotal">Rp0</span></div>
+    <button class="checkout" onclick="openCheckout()">Checkout →</button>
+  </div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeCheckout()">
+  <div class="sheet">
+    <button class="close" onclick="closeCheckout()">✕</button>
+    <h2 style="margin-top:0">🧾 Checkout Jastip Jember</h2>
+
+    <div id="orderBox"></div>
+
+    <div class="field">
+      <label>Nama Pembeli</label>
+      <input id="name" placeholder="Contoh: Budi">
+    </div>
+
+    <div class="field">
+      <label>Nomor WhatsApp</label>
+      <input id="phone" type="tel" placeholder="Contoh: 08123456789">
+    </div>
+
+    <div class="field">
+      <label>📍 Lokasi Pengiriman</label>
+      <div class="locRow">
+        <button class="locBtn" onclick="getLocation()">📍 Bagikan Lokasi Saya</button>
+      </div>
+      <div class="status" id="locStatus"></div>
+    </div>
+
+    <div class="field">
+      <label>🏠 Alamat / Ancer-Ancer Rumah</label>
+      <textarea id="landmark" placeholder="Contoh: Jalan Veteran No. 12, Pagar Hitam depan minimarket"></textarea>
+    </div>
+
+    <button class="wa" onclick="sendWhatsApp()">📲 Pesan via WhatsApp</button>
+  </div>
+</div>
+
+<script>
+const STORE_WA = "6289612490808";
+
+const RESTAURANTS = [
+  {
+    id:"gacoan",
+    name:"Resto Gacoan",
+    logo:"images/mie-gacoan.jpg",
+    banner:"",
+    emoji:"🍜",
+    products:[
+      {id:"gacoan-1",name:"Lumpia Udang",desc:"Renyah di luar, lembut di dalam dengan rasa udang",price:10000,image:"images/lumpia-udang.jpg",emoji:"🥟"},
+      {id:"gacoan-2",name:"Siomay",desc:"Perpaduan daging ayam dan udang, disajikan hangat",price:10000,image:"images/siomay.jpg",emoji:"🥟"},
+      {id:"gacoan-3",name:"Udang Keju",desc:"Lelehan keju lembut dalam adonan udang dan ayam",price:10000,image:"images/udang-keju.jpg",emoji:"🧀"},
+      {id:"gacoan-4",name:"Mie Gacoan",desc:"Mie pedas manis dengan tingkat kepedasan pilihan",price:10000,image:"images/mie-gacoan.jpg",emoji:"🍜",levels:[0,1,2,3,4]},
+      {id:"gacoan-5",name:"Mie Hompimpa",desc:"Mie pedas gurih untuk pecinta rasa pedas",price:10000,image:"images/mie-hompimpa.jpg",emoji:"🍜",levels:[1,2,3,4]},
+      {id:"gacoan-6",name:"Mie Suit",desc:"Mie gurih dan asin untuk yang tidak suka pedas",price:10000,image:"images/mie-suit.jpg",emoji:"🍜"},
+      {id:"gacoan-7",name:"Pangsit Goreng",desc:"Pangsit goreng renyah, cocok dimakan bersama mie",price:10000,image:"images/pangsit-goreng.jpg",emoji:"🥟"},
+      {id:"gacoan-8",name:"Es Gobak Sodor",desc:"Nata de coco, jelly, dan irisan strawberry",price:10000,image:"images/es-gobak-sodor.jpg",emoji:"🍹"},
+      {id:"gacoan-9",name:"Thai Tea",desc:"Teh Thailand manis dan creamy",price:10000,image:"images/thai-tea.jpg",emoji:"🧋"},
+      {id:"gacoan-10",name:"Thai Green Tea",desc:"Teh hijau Thailand manis dan creamy",price:10000,image:"images/thai-green-tea.jpg",emoji:"🍵"}
+    ]
+  }
+];
+
+const products = RESTAURANTS.flatMap(r => r.products);
+let cart = {}, locationLink = "", plusCode = "";
+
+const rupiah = n => new Intl.NumberFormat("id-ID", {
+  style: "currency",
+  currency: "IDR",
+  maximumFractionDigits: 0
+}).format(n);
+
+function imageOrEmoji(src, emoji) {
+  return src
+    ? `<img src="${src}" alt="" onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<span>${emoji}</span>')">`
+    : emoji;
+}
+
+function render() {
+  const el = document.getElementById("products");
+
+  el.innerHTML = RESTAURANTS.map(r => `
+    <section class="restaurantSection">
+
+      <div class="restaurantHeader">
+        <div class="restaurantIcon">
+          ${imageOrEmoji(r.logo, r.emoji)}
+        </div>
+        <div>
+          <h2>${r.name}</h2>
+          <span>${r.products.length} pilihan menu</span>
+        </div>
+      </div>
+
+      ${r.banner ? `
+        <img class="restaurantBanner"
+             src="${r.banner}"
+             alt="${r.name}"
+             onerror="this.style.display='none'">
+      ` : ""}
+
+      <div class="grid">
+        ${r.products.map(p => `
+          <div class="card">
+
+            <div class="photo">
+              ${imageOrEmoji(p.image, p.emoji)}
+            </div>
+
+            <div class="body">
+              <h3>${p.name}</h3>
+              <div class="desc">${p.desc}</div>
+              <div class="price">${rupiah(p.price)}</div>
+              ${p.levels ? `
+                <div class="field" style="margin:10px 0">
+                  <label style="font-size:13px">Pilih Level Pedas</label>
+                  <select id="level-${p.id}" style="width:100%;padding:11px;border:1px solid #ddd;border-radius:12px;font:inherit">
+                    ${p.levels.map(l => `<option value="${l}">Level ${l}</option>`).join("")}
+                  </select>
+                </div>
+              ` : ""}
+              <button class="add" onclick="add('${p.id}'${p.levels ? `,document.getElementById('level-${p.id}').value` : ""})">
+                + Tambah
+              </button>
+            </div>
+
+          </div>
+        `).join("")}
+      </div>
+
+    </section>
+  `).join("");
+
+  updateCart();
+}
+
+function add(id, level = "") {
+  const key = level ? `${id}|${level}` : id;
+  cart[key] = (cart[key] || 0) + 1;
+  updateCart();
+  const p = products.find(x => x.id === id);
+  showToast(`${p ? p.name : "Menu"}${level ? ` (Level ${level})` : ""} ditambahkan ✓`);
+}
+
+function showToast(message) {
+  const t = document.getElementById("toast");
+  t.textContent = message;
+  t.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+function changeQty(key, delta) {
+  cart[key] = (cart[key] || 0) + delta;
+  if (cart[key] <= 0) delete cart[key];
+  updateCart();
+  openCheckout();
+}
+
+function removeItem(key) {
+  delete cart[key];
+  updateCart();
+  if (getCartItems().length) openCheckout();
+  else closeCheckout();
+}
+
+function updateCart() {
+  let count = 0, total = 0;
+
+  Object.entries(cart).forEach(([key, qty]) => {
+    if (!qty) return;
+    const [id] = key.split("|");
+    const p = products.find(x => x.id === id);
+    if (p) { count += qty; total += qty * p.price; }
+  });
+
+  document.getElementById("count").textContent = count;
+  document.getElementById("bottomCount").textContent = count + " item";
+  document.getElementById("bottomTotal").textContent = rupiah(total);
+}
+
+function getCartItems() {
+  return Object.entries(cart).filter(([, qty]) => qty).map(([key, qty]) => {
+    const [id, level] = key.split("|");
+    const p = products.find(x => x.id === id);
+    return { p, level, qty };
+  }).filter(x => x.p);
+}
+
+function openCheckout() {
+  const items = getCartItems();
+  if (!items.length) {
+    alert("Keranjang masih kosong.");
+    return;
+  }
+
+  const lines = items.map(({ p, level, qty }) => {
+    const key = level ? `${p.id}|${level}` : p.id;
+    return `
+      <div class="orderLine" style="align-items:center">
+        <span>${p.name}${level ? ` (Level ${level})` : ""}</span>
+        <b>${rupiah(p.price * qty)}</b>
+      </div>
+      <div class="editRow">
+        <button class="qtyBtn" onclick="changeQty('${key}',-1)">−</button>
+        <b>${qty}</b>
+        <button class="qtyBtn" onclick="changeQty('${key}',1)">+</button>
+        <button class="removeBtn" onclick="removeItem('${key}')">Hapus</button>
+      </div>
+    `;
+  }).join("");
+
+  const total = items.reduce((s, { p, qty }) => s + qty * p.price, 0);
+
+  document.getElementById("orderBox").innerHTML = `
+    <div class="order">
+      ${lines}
+      <div class="total">Total: ${rupiah(total)}</div>
+    </div>
+  `;
+
+  document.getElementById("modal").classList.add("show");
+}
+
+function closeCheckout() {
+  document.getElementById("modal").classList.remove("show");
+}
+
+function toPlusCode(lat, lng) {
+  const A = "23456789CFGHJMPQRVWX";
+  lat = Math.min(Math.max(lat, -90), 90) + 90;
+  lng = ((lng + 180) % 360 + 360) % 360;
+  if (lat >= 180) lat = 180 - 1 / 16000;
+  let la = Math.floor(Math.round(lat * 8000 * 1e6) / 1e6);
+  let lo = Math.floor(Math.round(lng * 8000 * 1e6) / 1e6);
+  let pairs = [];
+  for (let i = 0; i < 5; i++) {
+    pairs.unshift(A[la % 20] + A[lo % 20]);
+    la = Math.floor(la / 20); lo = Math.floor(lo / 20);
+  }
+  const c = pairs.join("");
+  return c.slice(0, 8) + "+" + c.slice(8);
+}
+
+function getLocation() {
+  const s = document.getElementById("locStatus");
+
+  if (!navigator.geolocation) {
+    s.textContent = "Browser tidak mendukung GPS.";
+    return;
+  }
+
+  s.textContent = "Meminta izin lokasi...";
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const latitude = pos.coords.latitude;
+      const longitude = pos.coords.longitude;
+
+      locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+      plusCode = toPlusCode(latitude, longitude);
+
+      s.textContent = "✅ Lokasi berhasil diambil. Plus Code: " + plusCode;
+    },
+    () => {
+      s.textContent = "❌ Lokasi tidak bisa diambil. Aktifkan izin lokasi browser.";
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000
+    }
+  );
+}
+
+function sendWhatsApp(){
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const landmark=document.getElementById("landmark").value.trim();
+
+  if(!name || !phone){
+    alert("Nama dan nomor WhatsApp wajib diisi.");
+    return;
+  }
+
+  const items=getCartItems();
+  let total=0;
+  let message="*PESANAN JASTIP JEMBER*\n\n";
+
+  // Kelompokkan pesanan per restoran (urutan sesuai daftar restoran)
+  RESTAURANTS.forEach(r=>{
+    const group=items.filter(({p})=>r.products.includes(p));
+    if(!group.length) return;
+    let subtotal=0;
+    message+=`🍽️ *${r.name.toUpperCase()}*\n`;
+    group.forEach(({p,level,qty})=>{
+      const sub=p.price*qty;
+      subtotal+=sub;
+      message+=`• ${p.name}${level ? ` (Level ${level})` : ""} × ${qty} = ${rupiah(sub)}\n`;
+    });
+    message+=`_Subtotal: ${rupiah(subtotal)}_\n\n`;
+    total+=subtotal;
+  });
+
+  message+=`*Total:* ${rupiah(total)}\n`;
+  message+=`📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
+  message+=plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
+  if(locationLink) message+=`🔗 *Link Maps:* ${locationLink}\n`;
+  message+=`\n👤 *Nama:* ${name}\n`+
+    `📞 *WhatsApp:* ${phone}\n`+
+    `🏠 *Ancer-ancer:* ${landmark || "-"}`;
+
+  message=encodeURIComponent(message);
+
+  window.open(
+    `https://wa.me/${STORE_WA}?text=${message}`,
+    "_blank"
+  );
+}
+
+render();
+</script>
 </body>
 </html>

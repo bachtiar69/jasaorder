@@ -64,7 +64,6 @@ body.locked{overflow:hidden}
 .kotaCard b{display:block;font-size:19px}
 .kotaCard small{display:block;color:#ffffffc0;font-size:13px;margin-top:2px}
 .kotaTag{margin-left:auto;flex:none;background:#fff;color:#171717;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;white-space:nowrap}
-.kotaCard.soon .kotaTag{background:#facc15}
 .cityLink{display:inline-block;margin-top:14px;border:1px solid #ffffff4d;background:#ffffff14;color:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
 .cityLink:hover{background:#ffffff26}
 
@@ -81,6 +80,9 @@ body.locked{overflow:hidden}
 .cityMenu a.active{background:#fff0df;color:#c2410c}
 .cityMenu small{margin-left:auto;font-size:10px;font-weight:800;background:#facc15;color:#171717;padding:3px 7px;border-radius:999px;white-space:nowrap}
 @media(max-width:600px){.nav{padding:12px}.navLeft{gap:8px}.navLeft .brand{font-size:15px}.cityBtn{padding:8px 10px;font-size:12px}.cart{padding:10px 12px;font-size:13px}}
+.kotaNotice{margin-top:18px;text-align:left;background:#f973161f;border:1px dashed #f97316;border-radius:18px;padding:14px 16px;font-size:14px;line-height:1.55;color:#f3f3f3}
+.kotaNotice b{color:#fdba74}
+.kotaNotice .nTitle{display:block;font-size:15px;font-weight:800;color:#fff;margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -101,11 +103,15 @@ body.locked{overflow:hidden}
         <span><b>Malang</b><small>Jajanan Malang siap diantar</small></span>
         <span class="kotaTag">BUKA</span>
       </button>
-      <button class="kotaCard soon" onclick="pilihKota('jember')">
-        <span class="kotaEmoji">⏳</span>
-        <span><b>Jember</b><small>Sedang disiapkan</small></span>
-        <span class="kotaTag">SEGERA HADIR</span>
+      <button class="kotaCard" onclick="pilihKota('jember')">
+        <span class="kotaEmoji">🍜</span>
+        <span><b>Jember</b><small>Jajanan Jember siap diantar</small></span>
+        <span class="kotaTag">BUKA</span>
       </button>
+    </div>
+    <div class="kotaNotice">
+      <span class="nTitle">📢 Info untuk Sidoarjo &amp; Surabaya</span>
+      Kamu juga bisa pesan <b>Dikichi</b> lewat menu <b>Malang</b>, lho! Tinggal klik kartu Malang di atas, <b>harganya sama persis</b> ya!
     </div>
   </div>
 </div>
@@ -142,7 +148,7 @@ function bukaPilihKota(){
       <div class="cityMenu" role="menu">
         <a href="index.html?kota=probolinggo" class="active" onclick="toggleCityMenu(event,true)">📍 Probolinggo</a>
         <a href="indexmlg.html">📍 Malang</a>
-        <a href="indexjember.html">📍 Jember<small>SEGERA</small></a>
+        <a href="indexjember.html">📍 Jember</a>
       </div>
     </div>
     <div class="brand">🍴 <span>JASTIP</span> BAHCTIAR</div>
