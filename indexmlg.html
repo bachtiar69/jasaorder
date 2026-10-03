@@ -601,34 +601,44 @@ function getLocation() {
   );
 }
 
-function sendWhatsApp() {
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const landmark = document.getElementById("landmark").value.trim();
+function sendWhatsApp(){
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const landmark=document.getElementById("landmark").value.trim();
 
-  if (!name || !phone) {
+  if(!name || !phone){
     alert("Nama dan nomor WhatsApp wajib diisi.");
     return;
   }
 
-  const items = getCartItems();
-  let total = 0;
-  let message = "*PESANAN JASTIP MALANG*\n\n";
+  const items=getCartItems();
+  let total=0;
+  let message="*PESANAN JASTIP MALANG*\n\n";
 
-  items.forEach(({ p, level, qty }) => {
-    const sub = p.price * qty;
-    total += sub;
-    message += `• ${p.name}${level ? ` (Level ${level})` : ""} × ${qty} = ${rupiah(sub)}\n`;
+  // Kelompokkan pesanan per restoran (urutan sesuai daftar restoran)
+  RESTAURANTS.forEach(r=>{
+    const group=items.filter(({p})=>r.products.includes(p));
+    if(!group.length) return;
+    let subtotal=0;
+    message+=`🍽️ *${r.name.toUpperCase()}*\n`;
+    group.forEach(({p,level,qty})=>{
+      const sub=p.price*qty;
+      subtotal+=sub;
+      message+=`• ${p.name}${level ? ` (Level ${level})` : ""} × ${qty} = ${rupiah(sub)}\n`;
+    });
+    message+=`_Subtotal: ${rupiah(subtotal)}_\n\n`;
+    total+=subtotal;
   });
 
-  message += `\n*Total:* ${rupiah(total)}\n\n`;
-  message += plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
-  if (locationLink) message += `🔗 *Link Maps:* ${locationLink}\n`;
-  message += `\n👤 *Nama:* ${name}\n` +
-    `📞 *WhatsApp:* ${phone}\n` +
+  message+=`*Total:* ${rupiah(total)}\n`;
+  message+=`📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
+  message+=plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
+  if(locationLink) message+=`🔗 *Link Maps:* ${locationLink}\n`;
+  message+=`\n👤 *Nama:* ${name}\n`+
+    `📞 *WhatsApp:* ${phone}\n`+
     `🏠 *Ancer-ancer:* ${landmark || "-"}`;
 
-  message = encodeURIComponent(message);
+  message=encodeURIComponent(message);
 
   window.open(
     `https://wa.me/${STORE_WA}?text=${message}`,
