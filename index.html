@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JASTIP BAHCTIAR</title>
+<meta name="description" content="Jastip makanan dan minuman Probolinggo. Pilih restoran dan menu, checkout, lalu pesan langsung via WhatsApp.">
+<meta name="theme-color" content="#171717">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JASTIP BAHCTIAR - Pesan Makanan via WhatsApp">
+<meta property="og:description" content="Jastip makanan dan minuman Probolinggo. Pilih restoran dan menu, checkout, lalu pesan langsung via WhatsApp.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍴%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f7f8;color:#171717}
@@ -83,6 +89,25 @@ body.locked{overflow:hidden}
 .kotaNotice{margin-top:18px;text-align:left;background:#f973161f;border:1px dashed #f97316;border-radius:18px;padding:14px 16px;font-size:14px;line-height:1.55;color:#f3f3f3}
 .kotaNotice b{color:#fdba74}
 .kotaNotice .nTitle{display:block;font-size:15px;font-weight:800;color:#fff;margin-bottom:4px}
+
+/* ===== Tampilan profesional ===== */
+html{scroll-behavior:smooth}
+:focus-visible{outline:3px solid #f9731666;outline-offset:2px}
+.tools{position:sticky;top:67px;z-index:9;background:#f7f7f8;padding:10px 0 8px;margin:0 0 6px}
+.search{width:100%;border:1px solid #e5e5e5;background:#fff;border-radius:14px;padding:13px 16px;font:inherit;font-size:15px}
+.search:focus{border-color:#f97316;outline:0;box-shadow:0 0 0 3px #f9731626}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid #e5e5e5;background:#fff;color:#171717;border-radius:999px;padding:7px 13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.chip:hover,.chip.on{background:#171717;color:#fff;border-color:#171717}
+.restaurantSection{scroll-margin-top:140px}
+.empty{display:none;text-align:center;color:#777;padding:50px 10px}.empty.show{display:block}
+.card{transition:transform .15s,box-shadow .15s}.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #0000001a}
+.footer{background:#171717;color:#d4d4d4;margin-top:40px;padding:34px 18px 100px}
+.footerIn{max-width:1100px;margin:auto;display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between}
+.footer .brand{color:#fff;margin-bottom:8px}.footer p{margin:0;font-size:14px;max-width:340px;line-height:1.5}
+.footer h4{margin:0 0 10px;color:#fff;font-size:14px}.footer a{display:block;color:#d4d4d4;text-decoration:none;font-size:14px;padding:4px 0}.footer a:hover{color:#f97316}
+.copy{max-width:1100px;margin:24px auto 0;padding-top:16px;border-top:1px solid #ffffff1f;font-size:12px;color:#8a8a8a}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
 <body>
@@ -187,16 +212,24 @@ document.addEventListener('click',function(e){
     <span style="color:#777">Menu dari berbagai resto</span>
   </div>
 
-  <div id="products"></div>
-
-  <div class="guide">
-    <b>🛠️  EDIT:</b><br><br>
-    Cari <b>const RESTAURANTS=[</b> di kode. Di sana Anda bisa menambah restoran,
-    banner, logo, dan foto setiap menu.<br><br>
-    Foto menu bisa diletakkan di folder <b>images/</b>, lalu isi:
-    <b>image:"images/nama-foto.jpg"</b>.
+    <div class="tools">
+    <input class="search" id="q" type="search" placeholder="🔍 Cari menu atau restoran..." aria-label="Cari menu atau restoran" autocomplete="off">
+    <div class="chips" id="chips" aria-label="Lompat ke restoran"></div>
   </div>
+  <div class="empty" id="empty"><div style="font-size:42px">🍽️</div><b>Menu tidak ditemukan</b><br>Coba kata kunci lain.</div>
+
+  <div id="products"></div>
 </main>
+
+
+<footer class="footer">
+  <div class="footerIn">
+    <div><div class="brand">🍴 <span>JASTIP</span> BAHCTIAR</div><p>Layanan jastip makanan dan minuman. Pilih menu, checkout, lalu pesan langsung lewat WhatsApp.</p></div>
+    <div><h4>Pilih Kota</h4><a href="index.html?kota=probolinggo">Probolinggo</a><a href="indexmlg.html">Malang</a><a href="indexjember.html">Jember (segera hadir)</a></div>
+    <div><h4>Hubungi Kami</h4><a id="footWa" href="#" target="_blank" rel="noopener">💬 Chat WhatsApp</a></div>
+  </div>
+  <div class="copy">© <span id="yr"></span> JASTIP BAHCTIAR. Harga dan ketersediaan menu dapat berubah sewaktu-waktu.</div>
+</footer>
 
 <div class="bottom">
   <div class="bottomIn">
@@ -349,6 +382,45 @@ const RESTAURANTS=[
       {id:"nar-5",name:"Nasi 4T Rempah",desc:"Nasi, tahu, tempe, telur, terong dan serundeng",price:14000,image:"images/nasi-4t-rempah.jpg",emoji:"🍚"},
       {id:"nar-6",name:"Nasi Kulit Goreng Rempah",desc:"Nasi, kulit goreng/bakar, tahu, terong, lalapan dan sambal",price:14000,image:"images/nasi-kulit-rempah.jpg",emoji:"🍚"}
     ]
+  },
+
+  {
+    id:"random",
+    name:"Resto Random",
+    logo:"",
+    banner:"",
+    emoji:"🎲",
+    products:[
+      {id:"random-1",name:"Jus Jumbo Semangka 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Semangka 950ml",price:11500,image:"images/random-jus-semangka.jpg",emoji:"🥤"},
+      {id:"random-2",name:"Jus Jumbo Anggur 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Anggur 950ml",price:11500,image:"images/random-jus-anggur.jpg",emoji:"🥤"},
+      {id:"random-3",name:"Jus Jumbo Pear 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Pear 950ml",price:11500,image:"images/random-jus-pear.jpg",emoji:"🥤"},
+      {id:"random-4",name:"Jus Jumbo Sirsak 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Sirsak 950ml",price:11500,image:"images/random-jus-sirsak.jpg",emoji:"🥤"},
+      {id:"random-5",name:"Jus Jumbo Jambu 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Jambu 950ml",price:11500,image:"images/random-jus-jambu.jpg",emoji:"🥤"},
+      {id:"random-6",name:"Jus Jumbo Naga 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Naga 950ml",price:11500,image:"images/random-jus-naga.jpg",emoji:"🥤"},
+      {id:"random-7",name:"Jus Jumbo Jeruk 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Jeruk 950ml",price:11500,image:"images/random-jus-jeruk.jpg",emoji:"🥤"},
+      {id:"random-8",name:"Jus Jumbo Melon 950ml (Jus Buah Fadli)",desc:"Rasakan kesegaran Jus Jumbo Melon 950ml",price:11500,image:"images/random-jus-melon.jpg",emoji:"🥤"},
+      {id:"random-9",name:"Nasi Lalapan Ayam Goreng Serundeng (Warung Bunda)",desc:"Nasi pulen, ayam goreng renyah, serundeng gurih, sayuran segar",price:14500,image:"images/random-nasi-lalapan-serundeng.jpg",emoji:"🍚"},
+      {id:"random-10",name:"Nasi Lalapan Telor (Warung Bunda)",desc:"Nasi hangat, telur dadar, lalapan segar dan sambal pedas nikmat",price:13000,image:"images/random-nasi-lalapan-telor.jpg",emoji:"🍚"},
+      {id:"random-11",name:"Lemon Tea (Saga Coffee)",desc:"Teh segar dengan perpaduan rasa asam lemon yang menyegarkan, pas untuk melepas dahaga",price:9500,image:"images/random-saga-lemon-tea.jpg",emoji:"🍹"},
+      {id:"random-12",name:"Peach Tea (Saga Coffee)",desc:"Teh segar dengan sentuhan manis dan aroma buah peach yang ringan, menyegarkan",price:10500,image:"images/random-saga-peach-tea.jpg",emoji:"🍹"},
+      {id:"random-13",name:"Lunar Cream (Saga Coffee)",desc:"Perpaduan susu creamy dengan biskuit Oreo crumble yang lezat, manis, dan bikin nagih",price:13500,image:"images/random-saga-lunar-cream.jpg",emoji:"🥛"},
+      {id:"random-14",name:"Chocolate (Saga Coffee)",desc:"Creamy, manis, cocok untuk menemani harimu kapan saja",price:13500,image:"images/random-saga-chocolate.jpg",emoji:"🍫"},
+      {id:"random-15",name:"Es Kopi Salted Caramel (Saga Coffee)",desc:"Salted caramel yang manis untuk menemani harimu",price:14500,image:"images/random-saga-salted-caramel.jpg",emoji:"☕"},
+      {id:"random-16",name:"Es Kopi Susu Saga (Saga Coffee)",desc:"Creamy dan signature Saga",price:14500,image:"images/random-saga-kopi-susu-saga.jpg",emoji:"☕"},
+      {id:"random-17",name:"Mojito (Saga Coffee)",desc:"Minuman segar perpaduan mint, lemon, dan soda yang dingin menyegarkan",price:9500,image:"images/random-saga-mojito.jpg",emoji:"🍹"},
+      {id:"random-18",name:"Spring (Saga Coffee)",desc:"Perpaduan mangga manis segar dengan yakult yang sedikit asam, creamy, dan menyegarkan",price:11500,image:"images/random-saga-spring.jpg",emoji:"🥭"},
+      {id:"random-19",name:"Matcha (Saga Coffee)",desc:"Minuman segar dengan rasa teh hijau khas Jepang, lembut dan menenangkan di setiap tegukan",price:13500,image:"images/random-saga-matcha.jpg",emoji:"🍵"},
+      {id:"random-20",name:"Es Americano (Saga Coffee)",desc:"Minuman kopi dengan rasa asam, manis, dan akhiran sedikit bitter",price:10000,image:"images/random-saga-americano.jpg",emoji:"☕"},
+      {id:"random-21",name:"Es Cappucino (Saga Coffee)",desc:"Kopi berpadu dengan susu segar",price:14500,image:"images/random-saga-cappucino.jpg",emoji:"☕"},
+      {id:"random-22",name:"Es Kopi Susu Vanilla (Saga Coffee)",desc:"Harum, manis, dan siap menemani hari-harimu",price:14500,image:"images/random-saga-kopi-vanilla.jpg",emoji:"☕"},
+      {id:"random-23",name:"Es Kopi Susu Butterscotch (Saga Coffee)",desc:"Harum, manis, dan sedikit lebih creamy dengan perpaduan kopi yang masih fresh",price:14500,image:"images/random-saga-kopi-butterscotch.jpg",emoji:"☕"},
+      {id:"random-24",name:"Lalapan 4T + Nasi",desc:"Lalapan telur ayam, terong, tahu, tempe dengan sambal enak",price:11500,image:"images/random-lalapan-4t.jpg",emoji:"🍚"},
+      {id:"random-25",name:"Gado-gado",desc:"Sayuran segar, tahu, telur, dan kerupuk dengan siraman bumbu kacang",price:11000,image:"images/random-gado-gado.jpg",emoji:"🥗"},
+      {id:"random-26",name:"Bubur Ayam Plawangan",desc:"Bubur dicampur baluran ayam enak, lengkap dengan kerupuk dan sambal",price:9000,image:"images/random-bubur-ayam.jpg",emoji:"🥣"},
+      {id:"random-27",name:"Pisang Keju Meises",desc:"Pisang goreng dengan keju parut dan meises cokelat",price:11500,image:"images/random-pisang-keju-meises.jpg",emoji:"🍌"},
+      {id:"random-28",name:"Pisang Keju Original",desc:"Pisang goreng dengan taburan keju parut",price:10500,image:"images/random-pisang-keju-original.jpg",emoji:"🍌"},
+      {id:"random-29",name:"Rujak Tanpa Cingur",desc:"Rujak sayur dan buah dengan bumbu petis, tanpa cingur",price:10000,image:"images/random-rujak.jpg",emoji:"🥗"}
+    ]
   }
 ];
 
@@ -363,7 +435,7 @@ const rupiah=n=>new Intl.NumberFormat("id-ID",{
 
 function imageOrEmoji(src,emoji){
   return src
-    ? `<img src="${src}" alt="" onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<span>${emoji}</span>')">`
+    ? `<img loading="lazy" decoding="async" src="${src}" alt="" onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<span>${emoji}</span>')">`
     : emoji;
 }
 
@@ -613,6 +685,39 @@ function sendWhatsApp(){
 }
 
 render();
+</script>
+<script>
+(function(){
+  var box=document.getElementById('products'),q=document.getElementById('q'),chips=document.getElementById('chips'),empty=document.getElementById('empty'),busy=false;
+  try{document.getElementById('footWa').href='https://wa.me/'+STORE_WA}catch(e){}
+  document.getElementById('yr').textContent=new Date().getFullYear();
+  function norm(t){return (t||'').toLowerCase()}
+  function apply(){
+    var k=norm(q.value).trim(),shown=0;
+    document.querySelectorAll('.restaurantSection').forEach(function(sec){
+      var rn=norm(sec.querySelector('h2')&&sec.querySelector('h2').textContent),hit=0;
+      sec.querySelectorAll('.card').forEach(function(c){
+        var ok=!k||rn.indexOf(k)>-1||norm(c.textContent).indexOf(k)>-1;
+        c.style.display=ok?'':'none'; if(ok)hit++;
+      });
+      sec.style.display=hit?'':'none'; shown+=hit;
+    });
+    empty.classList.toggle('show',!shown);
+  }
+  function build(){
+    chips.innerHTML='';
+    document.querySelectorAll('.restaurantSection').forEach(function(sec,i){
+      sec.id='resto-'+i;
+      var b=document.createElement('button');b.className='chip';b.type='button';
+      b.textContent=sec.querySelector('h2').textContent.trim();
+      b.onclick=function(){q.value='';apply();sec.scrollIntoView({behavior:'smooth'})};
+      chips.appendChild(b);
+    });
+  }
+  q.addEventListener('input',apply);
+  new MutationObserver(function(){ if(busy)return; busy=true; setTimeout(function(){build();apply();busy=false},0) }).observe(box,{childList:true});
+  build();apply();
+})();
 </script>
 </body>
 </html>

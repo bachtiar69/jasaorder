@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JASTIP MALANG</title>
+<meta name="description" content="Jastip jajanan dan makanan Malang. Pilih menu favoritmu lalu pesan via WhatsApp.">
+<meta name="theme-color" content="#171717">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JASTIP MALANG - Jajanan Malang Siap Diantar">
+<meta property="og:description" content="Jastip jajanan dan makanan Malang. Pilih menu favoritmu lalu pesan via WhatsApp.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍜%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f7f8;color:#171717}
@@ -80,6 +86,25 @@ body.locked{overflow:hidden}
 .cityMenu a.active{background:#fff0df;color:#c2410c}
 .cityMenu small{margin-left:auto;font-size:10px;font-weight:800;background:#facc15;color:#171717;padding:3px 7px;border-radius:999px;white-space:nowrap}
 @media(max-width:600px){.nav{padding:12px}.navLeft{gap:8px}.navLeft .brand{font-size:15px}.cityBtn{padding:8px 10px;font-size:12px}.cart{padding:10px 12px;font-size:13px}}
+
+/* ===== Tampilan profesional ===== */
+html{scroll-behavior:smooth}
+:focus-visible{outline:3px solid #f9731666;outline-offset:2px}
+.tools{position:sticky;top:67px;z-index:9;background:#f7f7f8;padding:10px 0 8px;margin:0 0 6px}
+.search{width:100%;border:1px solid #e5e5e5;background:#fff;border-radius:14px;padding:13px 16px;font:inherit;font-size:15px}
+.search:focus{border-color:#f97316;outline:0;box-shadow:0 0 0 3px #f9731626}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid #e5e5e5;background:#fff;color:#171717;border-radius:999px;padding:7px 13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.chip:hover,.chip.on{background:#171717;color:#fff;border-color:#171717}
+.restaurantSection{scroll-margin-top:140px}
+.empty{display:none;text-align:center;color:#777;padding:50px 10px}.empty.show{display:block}
+.card{transition:transform .15s,box-shadow .15s}.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #0000001a}
+.footer{background:#171717;color:#d4d4d4;margin-top:40px;padding:34px 18px 100px}
+.footerIn{max-width:1100px;margin:auto;display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between}
+.footer .brand{color:#fff;margin-bottom:8px}.footer p{margin:0;font-size:14px;max-width:340px;line-height:1.5}
+.footer h4{margin:0 0 10px;color:#fff;font-size:14px}.footer a{display:block;color:#d4d4d4;text-decoration:none;font-size:14px;padding:4px 0}.footer a:hover{color:#f97316}
+.copy{max-width:1100px;margin:24px auto 0;padding-top:16px;border-top:1px solid #ffffff1f;font-size:12px;color:#8a8a8a}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
 <body>
@@ -131,14 +156,24 @@ document.addEventListener('click',function(e){
     <span style="color:#777">Daftar Resto Pilihan</span>
   </div>
 
-  <div id="products"></div>
-
-  <div class="guide">
-    <b>🛠️ PANDUAN PENGGUNAAN:</b><br><br>
-    Anda dapat mengganti nomor WhatsApp toko pada variabel <b>STORE_WA</b> di bagian bawah script.<br>
-    Untuk menambah foto, letakkan file gambar di folder <b>images/</b> lalu sesuaikan path pada variabel <b>RESTAURANTS</b>.
+    <div class="tools">
+    <input class="search" id="q" type="search" placeholder="🔍 Cari menu atau restoran..." aria-label="Cari menu atau restoran" autocomplete="off">
+    <div class="chips" id="chips" aria-label="Lompat ke restoran"></div>
   </div>
+  <div class="empty" id="empty"><div style="font-size:42px">🍽️</div><b>Menu tidak ditemukan</b><br>Coba kata kunci lain.</div>
+
+  <div id="products"></div>
 </main>
+
+
+<footer class="footer">
+  <div class="footerIn">
+    <div><div class="brand">🍴 <span>JASTIP</span> BAHCTIAR</div><p>Layanan jastip makanan dan minuman. Pilih menu, checkout, lalu pesan langsung lewat WhatsApp.</p></div>
+    <div><h4>Pilih Kota</h4><a href="index.html?kota=probolinggo">Probolinggo</a><a href="indexmlg.html">Malang</a><a href="indexjember.html">Jember (segera hadir)</a></div>
+    <div><h4>Hubungi Kami</h4><a id="footWa" href="#" target="_blank" rel="noopener">💬 Chat WhatsApp</a></div>
+  </div>
+  <div class="copy">© <span id="yr"></span> JASTIP BAHCTIAR. Harga dan ketersediaan menu dapat berubah sewaktu-waktu.</div>
+</footer>
 
 <div class="bottom">
   <div class="bottomIn">
@@ -192,10 +227,10 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍱",
     products: [
-      { id: "dikichi-1", name: "Crispy Original", desc: "Ayam crispy gurih, renyah di luar & juicy di dalam. Tidak pedas, cocok untuk semua.", price: 0, image: "gambar-mlg/dikichi-crispy-original.jpg", emoji: "🍗" },
-      { id: "dikichi-2", name: "Crispy Hot", desc: "Ayam crispy renyah di luar & juicy di dalam. Cocok untuk pecinta rasa gurih & pedas.", price: 0, image: "gambar-mlg/dikichi-crispy-hot.jpg", emoji: "🍗" },
-      { id: "dikichi-3", name: "Sundae", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Chocolate, Oreo, Strawberry.", price: 0, image: "gambar-mlg/dikichi-sundae.jpg", emoji: "🍨", variants: ["Coklat", "Oreo", "Strawberry"] },
-      { id: "dikichi-4", name: "Twizzy", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Hokkaido Matcha, Red Velvet, Silky Ube.", price: 0, image: "gambar-mlg/dikichi-twizzy.jpg", emoji: "🍦", variants: ["Matcha", "Ube", "Red Velvet"] }
+      { id: "dikichi-1", name: "Crispy Original", desc: "Ayam crispy gurih, renyah di luar & juicy di dalam. Tidak pedas, cocok untuk semua.", price: 12000, image: "gambar-mlg/dikichi-crispy-original.jpg", emoji: "🍗" },
+      { id: "dikichi-2", name: "Crispy Hot", desc: "Ayam crispy renyah di luar & juicy di dalam. Cocok untuk pecinta rasa gurih & pedas.", price: 13000, image: "gambar-mlg/dikichi-crispy-hot.jpg", emoji: "🍗" },
+      { id: "dikichi-3", name: "Sundae", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Chocolate, Oreo, Strawberry.", price: 10000, image: "gambar-mlg/dikichi-sundae.jpg", emoji: "🍨", variants: ["Coklat", "Oreo", "Strawberry"] },
+      { id: "dikichi-4", name: "Twizzy", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Hokkaido Matcha, Red Velvet, Silky Ube.", price: 10000, image: "gambar-mlg/dikichi-twizzy.jpg", emoji: "🍦", variants: ["Matcha", "Ube", "Red Velvet"] }
     ]
   },
   {
@@ -205,16 +240,16 @@ const RESTAURANTS = [
     banner:"",
     emoji:"🍜",
     products:[
-      {id:"gacoan-1",name:"Lumpia Udang",desc:"Renyah di luar, lembut di dalam dengan rasa udang",price:10000,image:"images/lumpia-udang.jpg",emoji:"🥟"},
-      {id:"gacoan-2",name:"Siomay",desc:"Perpaduan daging ayam dan udang, disajikan hangat",price:10000,image:"images/siomay.jpg",emoji:"🥟"},
-      {id:"gacoan-3",name:"Udang Keju",desc:"Lelehan keju lembut dalam adonan udang dan ayam",price:10000,image:"images/udang-keju.jpg",emoji:"🧀"},
-      {id:"gacoan-4",name:"Mie Gacoan",desc:"Mie pedas manis dengan tingkat kepedasan pilihan",price:10000,image:"images/mie-gacoan.jpg",emoji:"🍜",levels:[0,1,2,3,4]},
-      {id:"gacoan-5",name:"Mie Hompimpa",desc:"Mie pedas gurih untuk pecinta rasa pedas",price:10000,image:"images/mie-hompimpa.jpg",emoji:"🍜",levels:[1,2,3,4]},
-      {id:"gacoan-6",name:"Mie Suit",desc:"Mie gurih dan asin untuk yang tidak suka pedas",price:10000,image:"images/mie-suit.jpg",emoji:"🍜"},
-      {id:"gacoan-7",name:"Pangsit Goreng",desc:"Pangsit goreng renyah, cocok dimakan bersama mie",price:10000,image:"images/pangsit-goreng.jpg",emoji:"🥟"},
-      {id:"gacoan-8",name:"Es Gobak Sodor",desc:"Nata de coco, jelly, dan irisan strawberry",price:10000,image:"images/es-gobak-sodor.jpg",emoji:"🍹"},
-      {id:"gacoan-9",name:"Thai Tea",desc:"Teh Thailand manis dan creamy",price:10000,image:"images/thai-tea.jpg",emoji:"🧋"},
-      {id:"gacoan-10",name:"Thai Green Tea",desc:"Teh hijau Thailand manis dan creamy",price:10000,image:"images/thai-green-tea.jpg",emoji:"🍵"}
+      {id:"gacoan-1",name:"Lumpia Udang",desc:"Renyah di luar, lembut di dalam dengan rasa udang",price:11000,image:"images/lumpia-udang.jpg",emoji:"🥟"},
+      {id:"gacoan-2",name:"Siomay",desc:"Perpaduan daging ayam dan udang, disajikan hangat",price:11000,image:"images/siomay.jpg",emoji:"🥟"},
+      {id:"gacoan-3",name:"Udang Keju",desc:"Lelehan keju lembut dalam adonan udang dan ayam",price:11000,image:"images/udang-keju.jpg",emoji:"🧀"},
+      {id:"gacoan-4",name:"Mie Gacoan",desc:"Mie pedas manis dengan tingkat kepedasan pilihan",price:11000,image:"images/mie-gacoan.jpg",emoji:"🍜",levels:[0,1,2,3,4]},
+      {id:"gacoan-5",name:"Mie Hompimpa",desc:"Mie pedas gurih untuk pecinta rasa pedas",price:11000,image:"images/mie-hompimpa.jpg",emoji:"🍜",levels:[1,2,3,4]},
+      {id:"gacoan-6",name:"Mie Suit",desc:"Mie gurih dan asin untuk yang tidak suka pedas",price:11000,image:"images/mie-suit.jpg",emoji:"🍜"},
+      {id:"gacoan-7",name:"Pangsit Goreng",desc:"Pangsit goreng renyah, cocok dimakan bersama mie",price:11000,image:"images/pangsit-goreng.jpg",emoji:"🥟"},
+      {id:"gacoan-8",name:"Es Gobak Sodor",desc:"Nata de coco, jelly, dan irisan strawberry",price:11000,image:"images/es-gobak-sodor.jpg",emoji:"🍹"},
+      {id:"gacoan-9",name:"Thai Tea",desc:"Teh Thailand manis dan creamy",price:11000,image:"images/thai-tea.jpg",emoji:"🧋"},
+      {id:"gacoan-10",name:"Thai Green Tea",desc:"Teh hijau Thailand manis dan creamy",price:11000,image:"images/thai-green-tea.jpg",emoji:"🍵"}
     ]
   },
   {
@@ -224,10 +259,10 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍗",
     products: [
-      { id: "agji-1", name: "Nasi Ayam Geprek", desc: "Nasi dengan ayam geprek krispi, sambal pedas dan lalapan.", price: 0, image: "gambar-mlg/agji-nasi-ayam-geprek.jpg", emoji: "🍗" },
-      { id: "agji-2", name: "Ayam Geprek", desc: "Ayam krispi digeprek dengan sambal pedas.", price: 0, image: "", emoji: "🍗" },
-      { id: "agji-3", name: "Nasi Mie Ayam Geprek", desc: "Nasi dan mie dengan ayam geprek krispi dan sambal pedas.", price: 0, image: "", emoji: "🍜" },
-      { id: "agji-4", name: "Mie Ayam Geprek", desc: "Mie dengan ayam geprek krispi, sambal pedas dan lalapan.", price: 0, image: "gambar-mlg/agji-mie-ayam-geprek.jpg", emoji: "🍜" }
+      { id: "agji-1", name: "Nasi Ayam Geprek", desc: "Nasi dengan ayam geprek krispi, sambal pedas dan lalapan.", price: 13000, image: "gambar-mlg/agji-nasi-ayam-geprek.jpg", emoji: "🍗" },
+      { id: "agji-2", name: "Ayam Geprek", desc: "Ayam krispi digeprek dengan sambal pedas.", price: 10000, image: "", emoji: "🍗" },
+      { id: "agji-3", name: "Nasi Mie Ayam Geprek", desc: "Nasi dan mie dengan ayam geprek krispi dan sambal pedas.", price: 17000, image: "", emoji: "🍜" },
+      { id: "agji-4", name: "Mie Ayam Geprek", desc: "Mie dengan ayam geprek krispi, sambal pedas dan lalapan.", price: 10000, image: "gambar-mlg/agji-mie-ayam-geprek.jpg", emoji: "🍜" }
     ]
   },
   {
@@ -237,13 +272,37 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍞",
     products: [
-      { id: "rbl-1", name: "Roti Bakar Coklat (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian coklat.", price: 0, image: "gambar-mlg/roti-bakar-lette-coklat.jpg", emoji: "🍞" },
-      { id: "rbl-2", name: "Roti Bakar Keju (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian keju.", price: 0, image: "gambar-mlg/roti-bakar-lette-keju.jpg", emoji: "🍞" },
-      { id: "rbl-3", name: "Roti Bakar Tiramisu (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian tiramisu.", price: 0, image: "gambar-mlg/roti-bakar-lette-tiramisu.jpg", emoji: "🍞" },
-      { id: "rbl-4", name: "Roti Bakar Greentea (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian greentea.", price: 0, image: "gambar-mlg/roti-bakar-lette-greentea.jpg", emoji: "🍞" },
-      { id: "rbl-5", name: "Roti Bakar Strawberry (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian strawberry.", price: 0, image: "gambar-mlg/roti-bakar-lette-strawberry.jpg", emoji: "🍞" },
-      { id: "rbl-6", name: "Roti Bakar Taro (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian taro.", price: 0, image: "gambar-mlg/roti-bakar-lette-taro.jpg", emoji: "🍞" },
-      { id: "rbl-7", name: "Roti Bakar Red Velvet (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian red velvet.", price: 0, image: "gambar-mlg/roti-bakar-lette-red-velvet.jpg", emoji: "🍞" }
+      { id: "rbl-1", name: "Roti Bakar Coklat (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian coklat.", price: 10000, image: "gambar-mlg/roti-bakar-lette-coklat.jpg", emoji: "🍞" },
+      { id: "rbl-2", name: "Roti Bakar Keju (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian keju.", price: 10000, image: "gambar-mlg/roti-bakar-lette-keju.jpg", emoji: "🍞" },
+      { id: "rbl-3", name: "Roti Bakar Tiramisu (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian tiramisu.", price: 10000, image: "gambar-mlg/roti-bakar-lette-tiramisu.jpg", emoji: "🍞" },
+      { id: "rbl-4", name: "Roti Bakar Greentea (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian greentea.", price: 10000, image: "gambar-mlg/roti-bakar-lette-greentea.jpg", emoji: "🍞" },
+      { id: "rbl-5", name: "Roti Bakar Strawberry (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian strawberry.", price: 10000, image: "gambar-mlg/roti-bakar-lette-strawberry.jpg", emoji: "🍞" },
+      { id: "rbl-6", name: "Roti Bakar Taro (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian taro.", price: 10000, image: "gambar-mlg/roti-bakar-lette-taro.jpg", emoji: "🍞" },
+      { id: "rbl-7", name: "Roti Bakar Red Velvet (Medium)", desc: "Roti bakar hangat renyah di luar, lembut di mulut, berpadu sempurna dengan isian red velvet.", price: 10000, image: "gambar-mlg/roti-bakar-lette-red-velvet.jpg", emoji: "🍞" },
+      { id: "rbl-8", name: "Tiramisu Kacang (Medium)", desc: "5 potong roti bakar dengan isian tiramisu mix kacang", price: 12500, image: "gambar-mlg/roti-bakar-lette-tiramisu-kacang.jpg", emoji: "🍞" },
+      { id: "rbl-9", name: "Tiramisu Almond (Medium)", desc: "5 potong roti bakar dengan isian tiramisu mix almond", price: 12500, image: "gambar-mlg/roti-bakar-lette-tiramisu-almond.jpg", emoji: "🍞" },
+      { id: "rbl-10", name: "Tiramisu Keju (Medium)", desc: "5 potong roti bakar dengan isian tiramisu mix keju", price: 12500, image: "gambar-mlg/roti-bakar-lette-tiramisu-keju.jpg", emoji: "🍞" },
+      { id: "rbl-11", name: "Greentea Keju (Medium)", desc: "5 potong roti bakar dengan isian greentea mix keju", price: 12500, image: "gambar-mlg/roti-bakar-lette-greentea-keju.jpg", emoji: "🍞" },
+      { id: "rbl-12", name: "Coklat Keju (Medium)", desc: "Lezat coklat lembut dipadukan keju, ukuran sedang 5 potong menggoda selera.", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-keju.jpg", emoji: "🍞" },
+      { id: "rbl-13", name: "Coklat Keju Terlaris (Medium)", desc: "5 potong roti bakar dengan isian coklat mix keju", price: 19000, image: "gambar-mlg/roti-bakar-lette-coklat-keju.jpg", emoji: "🍞" },
+      { id: "rbl-14", name: "Coklat Kacang (Medium)", desc: "5 potong roti bakar dengan isian coklat mix kacang", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-kacang.jpg", emoji: "🍞" },
+      { id: "rbl-15", name: "Coklat Almond (Medium)", desc: "5 potong roti bakar dengan isian coklat mix almond", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-almond.jpg", emoji: "🍞" },
+      { id: "rbl-16", name: "Coklat Tiramisu (Medium)", desc: "5 potong roti istimewa dengan isian coklat dan tiramisu", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-tiramisu.jpg", emoji: "🍞" },
+      { id: "rbl-17", name: "Coklat Greentea (Medium)", desc: "5 potong roti bakar dengan isian coklat mix greentea", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-greentea.jpg", emoji: "🍞" },
+      { id: "rbl-18", name: "Coklat Strawberry (Medium)", desc: "5 potong roti istimewa dengan isian coklat dan strawberry istimewa", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-strawberry.jpg", emoji: "🍞" },
+      { id: "rbl-19", name: "Tiramisu Greentea (Medium)", desc: "5 potong roti bakar dengan isian tiramisu mix greentea", price: 12500, image: "gambar-mlg/roti-bakar-lette-tiramisu-greentea.jpg", emoji: "🍞" },
+      { id: "rbl-20", name: "Strawberry Red Velvet (Medium)", desc: "5 potong roti bakar dengan isian strawberry mix red velvet", price: 12500, image: "gambar-mlg/roti-bakar-lette-strawberry-red-velvet.jpg", emoji: "🍞" },
+      { id: "rbl-21", name: "Tiramisu Strawberry (Medium)", desc: "5 potong roti bakar dengan isian tiramisu mix strawberry", price: 12500, image: "gambar-mlg/roti-bakar-lette-tiramisu-strawberry.jpg", emoji: "🍞" },
+      { id: "rbl-22", name: "Taro Red Velvet (Medium)", desc: "5 potong roti bakar dengan isian taro mix red velvet", price: 12500, image: "gambar-mlg/roti-bakar-lette-taro-red-velvet.jpg", emoji: "🍞" },
+      { id: "rbl-23", name: "Strawberry Taro (Medium)", desc: "5 potong roti bakar dengan isian strawberry mix taro", price: 12500, image: "gambar-mlg/roti-bakar-lette-strawberry-taro.jpg", emoji: "🍞" },
+      { id: "rbl-24", name: "Greentea Red Velvet (Medium)", desc: "5 potong roti bakar dengan isian greentea mix red velvet", price: 12500, image: "gambar-mlg/roti-bakar-lette-greentea-red-velvet.jpg", emoji: "🍞" },
+      { id: "rbl-25", name: "Greentea Taro (Medium)", desc: "5 potong roti bakar dengan isian greentea mix taro", price: 12500, image: "gambar-mlg/roti-bakar-lette-greentea-taro.jpg", emoji: "🍞" },
+      { id: "rbl-26", name: "Greentea Strawberry (Medium)", desc: "5 potong roti bakar dengan isian greentea mix strawberry", price: 12500, image: "gambar-mlg/roti-bakar-lette-greentea-strawberry.jpg", emoji: "🍞" },
+      { id: "rbl-27", name: "Tiramisu Red Velvet (Medium)", desc: "5 potong roti bakar dengan isian tiramisu mix red velvet", price: 12500, image: "gambar-mlg/roti-bakar-lette-tiramisu-red-velvet.jpg", emoji: "🍞" },
+      { id: "rbl-28", name: "Tiramisu Taro (Medium)", desc: "5 potong roti bakar dengan isian tiramisu mix taro", price: 12500, image: "gambar-mlg/roti-bakar-lette-tiramisu-taro.jpg", emoji: "🍞" },
+      { id: "rbl-29", name: "Coklat Red Velvet (Medium)", desc: "5 potong roti istimewa dengan isian coklat dan red velvet", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-red-velvet.jpg", emoji: "🍞" },
+      { id: "rbl-30", name: "Coklat Taro (Medium)", desc: "Beberapa potong roti istimewa dengan isian coklat dan taro istimewa", price: 12500, image: "gambar-mlg/roti-bakar-lette-coklat-taro.jpg", emoji: "🍞" },
+      { id: "rbl-31", name: "Coklat Keju (Large)", desc: "10 potong roti bakar dengan isian coklat mix keju (Large)", price: 26500, image: "gambar-mlg/roti-bakar-lette-coklat-keju-large.jpg", emoji: "🍞" }
     ]
   },
   {
@@ -253,15 +312,15 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🥞",
     products: [
-      { id: "papo-1", name: "Pancong Chocomisu M", desc: "Kue pancong lumer rasa Choco Misu, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-chocomisu.jpg", emoji: "🥞" },
-      { id: "papo-2", name: "Pancong Meses Susu M", desc: "Kue pancong lumer rasa meses susu, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-meses-susu.jpg", emoji: "🥞" },
-      { id: "papo-3", name: "Pancong Tiramisu M", desc: "Kue pancong lumer rasa tiramisu, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-tiramisu.jpg", emoji: "🥞" },
-      { id: "papo-4", name: "Pancong Keju Susu M", desc: "Kue pancong lumer rasa keju susu, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-keju-susu.jpg", emoji: "🥞" },
-      { id: "papo-5", name: "Pancong Strawberry M", desc: "Kue pancong lumer rasa strawberry, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-strawberry.jpg", emoji: "🥞" },
-      { id: "papo-6", name: "Pancong Taro M", desc: "Kue pancong lumer rasa taro, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-taro.jpg", emoji: "🥞" },
-      { id: "papo-7", name: "Pancong Coklat M", desc: "Kue pancong lumer rasa coklat, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-coklat.jpg", emoji: "🥞" },
-      { id: "papo-8", name: "Pancong Cheese M", desc: "Kue pancong lumer rasa cheese, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-cheese.jpg", emoji: "🥞" },
-      { id: "papo-9", name: "Pancong Greentea M", desc: "Kue pancong lumer rasa greentea, ukuran M.", price: 0, image: "gambar-mlg/pancongpocong-greentea.jpg", emoji: "🥞" }
+      { id: "papo-1", name: "Pancong Chocomisu M", desc: "Kue pancong lumer rasa Choco Misu, ukuran M.", price: 12500, image: "gambar-mlg/pancongpocong-chocomisu.jpg", emoji: "🥞" },
+      { id: "papo-2", name: "Pancong Meses Susu M", desc: "Kue pancong lumer rasa meses susu, ukuran M.", price: 10000, image: "gambar-mlg/pancongpocong-meses-susu.jpg", emoji: "🥞" },
+      { id: "papo-3", name: "Pancong Tiramisu M", desc: "Kue pancong lumer rasa tiramisu, ukuran M.", price: 10000, image: "gambar-mlg/pancongpocong-tiramisu.jpg", emoji: "🥞" },
+      { id: "papo-4", name: "Pancong Keju Susu M", desc: "Kue pancong lumer rasa keju susu, ukuran M.", price: 10000, image: "gambar-mlg/pancongpocong-keju-susu.jpg", emoji: "🥞" },
+      { id: "papo-5", name: "Pancong Strawberry M", desc: "Kue pancong lumer rasa strawberry, ukuran M.", price: 10000, image: "gambar-mlg/pancongpocong-strawberry.jpg", emoji: "🥞" },
+      { id: "papo-6", name: "Pancong Taro M", desc: "Kue pancong lumer rasa taro, ukuran M.", price: 10000, image: "gambar-mlg/pancongpocong-taro.jpg", emoji: "🥞" },
+      { id: "papo-7", name: "Pancong Coklat M", desc: "Kue pancong lumer rasa coklat, ukuran M.", price: 12500, image: "gambar-mlg/pancongpocong-coklat.jpg", emoji: "🥞" },
+      { id: "papo-8", name: "Pancong Cheese M", desc: "Kue pancong lumer rasa cheese, ukuran M.", price: 10000, image: "gambar-mlg/pancongpocong-cheese.jpg", emoji: "🥞" },
+      { id: "papo-9", name: "Pancong Greentea M", desc: "Kue pancong lumer rasa greentea, ukuran M.", price: 12500, image: "gambar-mlg/pancongpocong-greentea.jpg", emoji: "🥞" }
     ]
   },
   {
@@ -271,10 +330,10 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍗",
     products: [
-      { id: "bangjo-1", name: "Nasi + Ayam Geprek", desc: "Sambal tidak bisa dipisah.", price: 0, image: "gambar-mlg/bangjo-nasi-ayam-geprek.jpg", emoji: "🍗" },
-      { id: "bangjo-2", name: "Nasi Ayam + Tahu Geprek", desc: "Sambal tidak bisa dipisah.", price: 0, image: "gambar-mlg/bangjo-nasi-ayam-tahu-geprek.jpg", emoji: "🍗" },
-      { id: "bangjo-3", name: "Nasi Ayam + Tempe Geprek", desc: "Sambal tidak bisa dipisah.", price: 0, image: "gambar-mlg/bangjo-nasi-ayam-tempe-geprek.jpg", emoji: "🍗" },
-      { id: "bangjo-4", name: "Nasi Ayam + Tahu Tempe Geprek", desc: "Sambal tidak bisa dipisah.", price: 0, image: "gambar-mlg/bangjo-nasi-ayam-tahu-tempe-geprek.jpg", emoji: "🍗" }
+      { id: "bangjo-1", name: "Nasi + Ayam Geprek", desc: "Sambal tidak bisa dipisah.", price: 10500, image: "gambar-mlg/bangjo-nasi-ayam-geprek.jpg", emoji: "🍗" },
+      { id: "bangjo-2", name: "Nasi Ayam + Tahu Geprek", desc: "Sambal tidak bisa dipisah.", price: 12500, image: "gambar-mlg/bangjo-nasi-ayam-tahu-geprek.jpg", emoji: "🍗" },
+      { id: "bangjo-3", name: "Nasi Ayam + Tempe Geprek", desc: "Sambal tidak bisa dipisah.", price: 12500, image: "gambar-mlg/bangjo-nasi-ayam-tempe-geprek.jpg", emoji: "🍗" },
+      { id: "bangjo-4", name: "Nasi Ayam + Tahu Tempe Geprek", desc: "Sambal tidak bisa dipisah.", price: 14000, image: "gambar-mlg/bangjo-nasi-ayam-tahu-tempe-geprek.jpg", emoji: "🍗" }
     ]
   },
   {
@@ -284,13 +343,13 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🥤",
     products: [
-      { id: "jupe-1", name: "Jus Belimbing Jumbo", desc: "Dibuat dari buah-buahan alami segar pilihan.", price: 0, image: "gambar-mlg/jupe-jus-belimbing-jumbo.jpg", emoji: "⭐" },
-      { id: "jupe-2", name: "Jus Jeruk Jumbo", desc: "Dibuat dari buah jeruk pilihan yang segar dan manis alami.", price: 0, image: "gambar-mlg/jupe-jus-jeruk-jumbo.jpg", emoji: "🍊" },
-      { id: "jupe-3", name: "Jus Nanas Jumbo", desc: "Dibuat dari nanas berkualitas pilihan.", price: 0, image: "gambar-mlg/jupe-jus-nanas-jumbo.jpg", emoji: "🍍" },
-      { id: "jupe-4", name: "Jus Pisang Jumbo", desc: "Jus pisang jumbo lembut dengan rasa pisang berkualitas tinggi, segar dan nikmat.", price: 0, image: "gambar-mlg/jupe-jus-pisang-jumbo.jpg", emoji: "🍌" },
-      { id: "jupe-5", name: "Jus Semangka Jumbo", desc: "Jus semangka segar dan menyegarkan, cocok dinikmati di hari panas.", price: 0, image: "gambar-mlg/jupe-jus-semangka-jumbo.jpg", emoji: "🍉" },
-      { id: "jupe-6", name: "Jus Tomat Jumbo", desc: "Dibuat dari buah tomat asli segar pilihan.", price: 0, image: "gambar-mlg/jupe-jus-tomat-jumbo.jpg", emoji: "🍅" },
-      { id: "jupe-7", name: "Jus Wortel Jumbo", desc: "Segar dan alami, jus wortel jumbo yang menyegarkan dan penuh manfaat.", price: 0, image: "gambar-mlg/jupe-jus-wortel-jumbo.jpg", emoji: "🥕" }
+      { id: "jupe-1", name: "Jus Belimbing Jumbo", desc: "Dibuat dari buah-buahan alami segar pilihan.", price: 12000, image: "gambar-mlg/jupe-jus-belimbing-jumbo.jpg", emoji: "⭐" },
+      { id: "jupe-2", name: "Jus Jeruk Jumbo", desc: "Dibuat dari buah jeruk pilihan yang segar dan manis alami.", price: 12000, image: "gambar-mlg/jupe-jus-jeruk-jumbo.jpg", emoji: "🍊" },
+      { id: "jupe-3", name: "Jus Nanas Jumbo", desc: "Dibuat dari nanas berkualitas pilihan.", price: 12000, image: "gambar-mlg/jupe-jus-nanas-jumbo.jpg", emoji: "🍍" },
+      { id: "jupe-4", name: "Jus Pisang Jumbo", desc: "Jus pisang jumbo lembut dengan rasa pisang berkualitas tinggi, segar dan nikmat.", price: 12000, image: "gambar-mlg/jupe-jus-pisang-jumbo.jpg", emoji: "🍌" },
+      { id: "jupe-5", name: "Jus Semangka Jumbo", desc: "Jus semangka segar dan menyegarkan, cocok dinikmati di hari panas.", price: 12000, image: "gambar-mlg/jupe-jus-semangka-jumbo.jpg", emoji: "🍉" },
+      { id: "jupe-6", name: "Jus Tomat Jumbo", desc: "Dibuat dari buah tomat asli segar pilihan.", price: 12000, image: "gambar-mlg/jupe-jus-tomat-jumbo.jpg", emoji: "🍅" },
+      { id: "jupe-7", name: "Jus Wortel Jumbo", desc: "Segar dan alami, jus wortel jumbo yang menyegarkan dan penuh manfaat.", price: 12000, image: "gambar-mlg/jupe-jus-wortel-jumbo.jpg", emoji: "🥕" }
     ]
   },
   {
@@ -300,12 +359,12 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🥖",
     products: [
-      { id: "gokki-1", name: "Roti Bun Go Cheese", desc: "Roti bun isi butter dengan topping keju. Dapat 2 item.", price: 0, image: "gambar-mlg/roti-gokki-roti-bun-go-cheese.jpg", emoji: "🧀" },
-      { id: "gokki-2", name: "Roti Bun Go Coffee", desc: "Roti bun isi buttermilk dengan topping krim rasa kopi. Dapat 2 item.", price: 0, image: "gambar-mlg/roti-gokki-roti-bun-go-coffee.jpg", emoji: "☕" },
-      { id: "gokki-3", name: "Roti Bun Go Butter Milk", desc: "Roti Gokki yang lembut dengan isian buttermilk yang creamy. Dapat 2 item.", price: 0, image: "gambar-mlg/roti-gokki-roti-bun-go-butter-milk.jpg", emoji: "🥛" },
-      { id: "gokki-4", name: "Roti Bun Go Choco", desc: "Roti Gokki bun yang lembut dengan isian coklat yang creamy dan topping coklat. Dapat 2 item.", price: 0, image: "gambar-mlg/roti-gokki-roti-bun-go-choco.jpg", emoji: "🍫" },
-      { id: "gokki-5", name: "Gokki Pizza", desc: "Roti Gokki pizza yang lembut dengan topping keju dan sosis yang gurih. Dapat 2 item.", price: 0, image: "gambar-mlg/roti-gokki-gokki-pizza.jpg", emoji: "🍕" },
-      { id: "gokki-6", name: "Gokki Sisir", desc: "Roti Gokki sisir yang lembut dengan isian butter yang creamy. Dapat 2 item.", price: 0, image: "gambar-mlg/roti-gokki-gokki-sisir.jpg", emoji: "🍞" }
+      { id: "gokki-1", name: "Roti Bun Go Cheese", desc: "Roti bun isi butter dengan topping keju. Dapat 2 item.", price: 10000, image: "gambar-mlg/roti-gokki-roti-bun-go-cheese.jpg", emoji: "🧀" },
+      { id: "gokki-2", name: "Roti Bun Go Coffee", desc: "Roti bun isi buttermilk dengan topping krim rasa kopi. Dapat 2 item.", price: 10000, image: "gambar-mlg/roti-gokki-roti-bun-go-coffee.jpg", emoji: "☕" },
+      { id: "gokki-3", name: "Roti Bun Go Butter Milk", desc: "Roti Gokki yang lembut dengan isian buttermilk yang creamy. Dapat 2 item.", price: 10000, image: "gambar-mlg/roti-gokki-roti-bun-go-butter-milk.jpg", emoji: "🥛" },
+      { id: "gokki-4", name: "Roti Bun Go Choco", desc: "Roti Gokki bun yang lembut dengan isian coklat yang creamy dan topping coklat. Dapat 2 item.", price: 10000, image: "gambar-mlg/roti-gokki-roti-bun-go-choco.jpg", emoji: "🍫" },
+      { id: "gokki-5", name: "Gokki Pizza", desc: "Roti Gokki pizza yang lembut dengan topping keju dan sosis yang gurih. Dapat 2 item.", price: 10000, image: "gambar-mlg/roti-gokki-gokki-pizza.jpg", emoji: "🍕" },
+      { id: "gokki-6", name: "Gokki Sisir", desc: "Roti Gokki sisir yang lembut dengan isian butter yang creamy. Dapat 2 item.", price: 10000, image: "gambar-mlg/roti-gokki-gokki-sisir.jpg", emoji: "🍞" }
     ]
   },
   {
@@ -315,7 +374,7 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍢",
     products: [
-      { id: "sate-1", name: "Sate Aja 10 Tusuk", desc: "Sate madura 10 tusuk dengan bumbu kacang dan bawang merah.", price: 0, image: "gambar-mlg/sate-sate-aja-10-tusuk.jpg", emoji: "🍢" }
+      { id: "sate-1", name: "Sate Aja 10 Tusuk", desc: "Sate madura 10 tusuk dengan bumbu kacang dan bawang merah.", price: 11500, image: "gambar-mlg/sate-sate-aja-10-tusuk.jpg", emoji: "🍢" }
     ]
   },
   {
@@ -325,15 +384,15 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍳",
     products: [
-      { id: "angel-1", name: "Nasgor Rempah Sapi", desc: "Nasi goreng dimasak dengan bumbu rempah yang khas, topping daging sapi.", price: 0, image: "gambar-mlg/nasgorangel-nasgor-rempah-sapi.jpg", emoji: "🍳" },
-      { id: "angel-2", name: "Nasgor Hongkong", desc: "Nasi goreng putihan dengan telur orak-arik dan topping wortel, kacang polong, bakso.", price: 0, image: "gambar-mlg/nasgorangel-nasgor-hongkong.jpg", emoji: "🍳" },
-      { id: "angel-3", name: "Capcay Kuah", desc: "Aneka sayuran dimasak kuah dengan topping daging ayam, udang, bakso, gurih.", price: 0, image: "gambar-mlg/nasgorangel-capcay-kuah.jpg", emoji: "🍳" },
-      { id: "angel-4", name: "Nasi Goreng Kecap", desc: "Nasi goreng kecap dengan pilihan isian: nasi / ayam / sosis / bakso.", price: 0, image: "gambar-mlg/nasgorangel-nasi-goreng-kecap.jpg", emoji: "🍳" },
-      { id: "angel-5", name: "Bakmie Goreng Jawa", desc: "Bakmie goreng Jawa dengan pilihan isian: sosis / ayam / bakso / sayur.", price: 0, image: "gambar-mlg/nasgorangel-bakmie-goreng-jawa.jpg", emoji: "🍳" },
-      { id: "angel-6", name: "Nasi Goreng Kecap Hot", desc: "Nasi goreng kecap pedas dengan pilihan isian: nasi / ayam / sosis / bakso.", price: 0, image: "gambar-mlg/nasgorangel-nasi-goreng-kecap-hot.jpg", emoji: "🍳" },
-      { id: "angel-7", name: "Nasi Goreng Jawa Hot", desc: "Nasi goreng Jawa pedas.", price: 0, image: "gambar-mlg/nasgorangel-nasi-goreng-jawa-hot.jpg", emoji: "🍳" },
-      { id: "angel-8", name: "Nasi Goreng Merah", desc: "Nasi goreng merah.", price: 0, image: "gambar-mlg/nasgorangel-nasi-goreng-merah.jpg", emoji: "🍳" },
-      { id: "angel-9", name: "Nasi Goreng Jawa", desc: "Nasi goreng khas Jawa.", price: 0, image: "gambar-mlg/nasgorangel-nasi-goreng-jawa.jpg", emoji: "🍳" }
+      { id: "angel-1", name: "Nasgor Rempah Sapi", desc: "Nasi goreng dimasak dengan bumbu rempah yang khas, topping daging sapi.", price: 12500, image: "gambar-mlg/nasgorangel-nasgor-rempah-sapi.jpg", emoji: "🍳" },
+      { id: "angel-2", name: "Nasgor Hongkong", desc: "Nasi goreng putihan dengan telur orak-arik dan topping wortel, kacang polong, bakso.", price: 10000, image: "gambar-mlg/nasgorangel-nasgor-hongkong.jpg", emoji: "🍳" },
+      { id: "angel-3", name: "Capcay Kuah", desc: "Aneka sayuran dimasak kuah dengan topping daging ayam, udang, bakso, gurih.", price: 10000, image: "gambar-mlg/nasgorangel-capcay-kuah.jpg", emoji: "🍳" },
+      { id: "angel-4", name: "Nasi Goreng Kecap", desc: "Nasi goreng kecap dengan pilihan isian: nasi / ayam / sosis / bakso.", price: 12000, image: "gambar-mlg/nasgorangel-nasi-goreng-kecap.jpg", emoji: "🍳" },
+      { id: "angel-5", name: "Bakmie Goreng Jawa", desc: "Bakmie goreng Jawa dengan pilihan isian: sosis / ayam / bakso / sayur.", price: 12000, image: "gambar-mlg/nasgorangel-bakmie-goreng-jawa.jpg", emoji: "🍳" },
+      { id: "angel-6", name: "Nasi Goreng Kecap Hot", desc: "Nasi goreng kecap pedas dengan pilihan isian: nasi / ayam / sosis / bakso.", price: 12000, image: "gambar-mlg/nasgorangel-nasi-goreng-kecap-hot.jpg", emoji: "🍳" },
+      { id: "angel-7", name: "Nasi Goreng Jawa Hot", desc: "Nasi goreng Jawa pedas.", price: 12000, image: "gambar-mlg/nasgorangel-nasi-goreng-jawa-hot.jpg", emoji: "🍳" },
+      { id: "angel-8", name: "Nasi Goreng Merah", desc: "Nasi goreng merah.", price: 12000, image: "gambar-mlg/nasgorangel-nasi-goreng-merah.jpg", emoji: "🍳" },
+      { id: "angel-9", name: "Nasi Goreng Jawa", desc: "Nasi goreng khas Jawa.", price: 12000, image: "gambar-mlg/nasgorangel-nasi-goreng-jawa.jpg", emoji: "🍳" }
     ]
   },
   {
@@ -343,17 +402,17 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍚",
     products: [
-      { id: "hoki-1", name: "Nasgor Seafood", desc: "Nasi goreng putihan dengan telur orak-arik, topping udang, cumi dan oriental seafood.", price: 0, image: "gambar-mlg/samihoki-nasgor-seafood.jpg", emoji: "🍚" },
-      { id: "hoki-2", name: "Nasgor Pattaya (Spicy)", desc: "Nasi goreng pakai saos sedikit pedas dibungkus dengan telur dadar.", price: 0, image: "gambar-mlg/samihoki-nasgor-pattaya-spicy.jpg", emoji: "🍚" },
-      { id: "hoki-3", name: "Nasgor Telur Samihoki", desc: "Nasi goreng merah pakai saos dengan topping telur orak-arik, banyak telurnya.", price: 0, image: "gambar-mlg/samihoki-nasgor-telur-samihoki.jpg", emoji: "🍚" },
-      { id: "hoki-4", name: "Capcay Goreng", desc: "Aneka sayuran dengan topping ayam, bakso, udang, gurih mantul.", price: 0, image: "gambar-mlg/samihoki-capcay-goreng.jpg", emoji: "🍚" },
-      { id: "hoki-5", name: "Nasgor Mawut", desc: "Nasi goreng putihan dengan telur orak-arik dan topping sayuran dan mie.", price: 0, image: "gambar-mlg/samihoki-nasgor-mawut.jpg", emoji: "🍚" },
-      { id: "hoki-6", name: "Nasgor Ikan Asin", desc: "Nasi goreng putihan dengan topping telur orak-arik dan ikan asin jambal.", price: 0, image: "gambar-mlg/samihoki-nasgor-ikan-asin.jpg", emoji: "🍚" },
-      { id: "hoki-7", name: "Nasgor Ikan Teri", desc: "Nasi goreng putihan dengan topping telur orak-arik dan ikan teri krispi.", price: 0, image: "gambar-mlg/samihoki-nasgor-ikan-teri.jpg", emoji: "🍚" },
-      { id: "hoki-8", name: "Nasgor Udang", desc: "Nasi goreng merah dengan telur orak-arik dan topping udang.", price: 0, image: "gambar-mlg/samihoki-nasgor-udang.jpg", emoji: "🍚" },
-      { id: "hoki-9", name: "Me Goreng Samihoki", desc: "Bakmi goreng dengan telur orak-arik dan aneka sayuran, topping ayam, udang, bakso.", price: 0, image: "gambar-mlg/samihoki-me-goreng-samihoki.jpg", emoji: "🍚" },
-      { id: "hoki-10", name: "Kwetiau Goreng The Best", desc: "Kwetiau goreng dimasak telur dengan sayuran dan topping daging ayam, bakso.", price: 0, image: "gambar-mlg/samihoki-kwetiau-goreng-the-best.jpg", emoji: "🍚" },
-      { id: "hoki-11", name: "Nasi Goreng Rempah Ayam", desc: "Nasi goreng dimasak dengan bumbu rempah khas Samihoki, berisi ayam.", price: 0, image: "gambar-mlg/samihoki-nasi-goreng-rempah-ayam.jpg", emoji: "🍚" }
+      { id: "hoki-1", name: "Nasgor Seafood", desc: "Nasi goreng putihan dengan telur orak-arik, topping udang, cumi dan oriental seafood.", price: 11500, image: "gambar-mlg/samihoki-nasgor-seafood.jpg", emoji: "🍚" },
+      { id: "hoki-2", name: "Nasgor Pattaya (Spicy)", desc: "Nasi goreng pakai saos sedikit pedas dibungkus dengan telur dadar.", price: 11500, image: "gambar-mlg/samihoki-nasgor-pattaya-spicy.jpg", emoji: "🍚" },
+      { id: "hoki-3", name: "Nasgor Telur Samihoki", desc: "Nasi goreng merah pakai saos dengan topping telur orak-arik, banyak telurnya.", price: 10000, image: "gambar-mlg/samihoki-nasgor-telur-samihoki.jpg", emoji: "🍚" },
+      { id: "hoki-4", name: "Capcay Goreng", desc: "Aneka sayuran dengan topping ayam, bakso, udang, gurih mantul.", price: 11500, image: "gambar-mlg/samihoki-capcay-goreng.jpg", emoji: "🍚" },
+      { id: "hoki-5", name: "Nasgor Mawut", desc: "Nasi goreng putihan dengan telur orak-arik dan topping sayuran dan mie.", price: 10000, image: "gambar-mlg/samihoki-nasgor-mawut.jpg", emoji: "🍚" },
+      { id: "hoki-6", name: "Nasgor Ikan Asin", desc: "Nasi goreng putihan dengan topping telur orak-arik dan ikan asin jambal.", price: 10000, image: "gambar-mlg/samihoki-nasgor-ikan-asin.jpg", emoji: "🍚" },
+      { id: "hoki-7", name: "Nasgor Ikan Teri", desc: "Nasi goreng putihan dengan topping telur orak-arik dan ikan teri krispi.", price: 10000, image: "gambar-mlg/samihoki-nasgor-ikan-teri.jpg", emoji: "🍚" },
+      { id: "hoki-8", name: "Nasgor Udang", desc: "Nasi goreng merah dengan telur orak-arik dan topping udang.", price: 12500, image: "gambar-mlg/samihoki-nasgor-udang.jpg", emoji: "🍚" },
+      { id: "hoki-9", name: "Me Goreng Samihoki", desc: "Bakmi goreng dengan telur orak-arik dan aneka sayuran, topping ayam, udang, bakso.", price: 10000, image: "gambar-mlg/samihoki-me-goreng-samihoki.jpg", emoji: "🍚" },
+      { id: "hoki-10", name: "Kwetiau Goreng The Best", desc: "Kwetiau goreng dimasak telur dengan sayuran dan topping daging ayam, bakso.", price: 13400, image: "gambar-mlg/samihoki-kwetiau-goreng-the-best.jpg", emoji: "🍚" },
+      { id: "hoki-11", name: "Nasi Goreng Rempah Ayam", desc: "Nasi goreng dimasak dengan bumbu rempah khas Samihoki, berisi ayam.", price: 12500, image: "gambar-mlg/samihoki-nasi-goreng-rempah-ayam.jpg", emoji: "🍚" }
     ]
   },
   {
@@ -363,18 +422,18 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍛",
     products: [
-      { id: "kepo-1", name: "Nasi Goreng Ayam", desc: "Nasi goreng dengan topping ayam fillet dan sayur, dimasak ala restoran.", price: 0, image: "gambar-mlg/nasgorkepo-nasi-goreng-ayam.jpg", emoji: "🍛" },
-      { id: "kepo-2", name: "Nasi Goreng Baso Ikan", desc: "Nasi goreng dengan topping baso ikan dan sayur, dimasak ala restoran.", price: 0, image: "gambar-mlg/nasgorkepo-nasi-goreng-baso-ikan.jpg", emoji: "🍛" },
-      { id: "kepo-3", name: "Nasi Goreng Sosis", desc: "Nasi goreng dengan topping sosis dan sayur, dimasak ala restoran.", price: 0, image: "gambar-mlg/nasgorkepo-nasi-goreng-sosis.jpg", emoji: "🍛" },
-      { id: "kepo-4", name: "Nasi Goreng Ikan Asin", desc: "Nasi goreng dengan topping ikan asin jambal, ayam fillet dan sayur.", price: 0, image: "gambar-mlg/nasgorkepo-nasi-goreng-ikan-asin.jpg", emoji: "🍛" },
-      { id: "kepo-5", name: "Nasi Goreng Mawut", desc: "Nasi goreng dengan topping ayam fillet, baso ikan, mie dan sayur.", price: 0, image: "gambar-mlg/nasgorkepo-nasi-goreng-mawut.jpg", emoji: "🍛" },
-      { id: "kepo-6", name: "Nasi Goreng Pete", desc: "Nasi goreng dengan topping pete, baso ikan dan sayur.", price: 0, image: "gambar-mlg/nasgorkepo-nasi-goreng-pete.jpg", emoji: "🍛" },
-      { id: "kepo-7", name: "Nasi Goreng Hongkong", desc: "Nasi goreng putihan dengan topping baso ikan, sosis dan sayur.", price: 0, image: "gambar-mlg/nasgorkepo-nasi-goreng-hongkong.jpg", emoji: "🍛" },
+      { id: "kepo-1", name: "Nasi Goreng Ayam", desc: "Nasi goreng dengan topping ayam fillet dan sayur, dimasak ala restoran.", price: 11500, image: "gambar-mlg/nasgorkepo-nasi-goreng-ayam.jpg", emoji: "🍛" },
+      { id: "kepo-2", name: "Nasi Goreng Baso Ikan", desc: "Nasi goreng dengan topping baso ikan dan sayur, dimasak ala restoran.", price: 11500, image: "gambar-mlg/nasgorkepo-nasi-goreng-baso-ikan.jpg", emoji: "🍛" },
+      { id: "kepo-3", name: "Nasi Goreng Sosis", desc: "Nasi goreng dengan topping sosis dan sayur, dimasak ala restoran.", price: 12500, image: "gambar-mlg/nasgorkepo-nasi-goreng-sosis.jpg", emoji: "🍛" },
+      { id: "kepo-4", name: "Nasi Goreng Ikan Asin", desc: "Nasi goreng dengan topping ikan asin jambal, ayam fillet dan sayur.", price: 12500, image: "gambar-mlg/nasgorkepo-nasi-goreng-ikan-asin.jpg", emoji: "🍛" },
+      { id: "kepo-5", name: "Nasi Goreng Mawut", desc: "Nasi goreng dengan topping ayam fillet, baso ikan, mie dan sayur.", price: 12500, image: "gambar-mlg/nasgorkepo-nasi-goreng-mawut.jpg", emoji: "🍛" },
+      { id: "kepo-6", name: "Nasi Goreng Pete", desc: "Nasi goreng dengan topping pete, baso ikan dan sayur.", price: 12000, image: "gambar-mlg/nasgorkepo-nasi-goreng-pete.jpg", emoji: "🍛" },
+      { id: "kepo-7", name: "Nasi Goreng Hongkong", desc: "Nasi goreng putihan dengan topping baso ikan, sosis dan sayur.", price: 11500, image: "gambar-mlg/nasgorkepo-nasi-goreng-hongkong.jpg", emoji: "🍛" },
       { id: "kepo-8", name: "Bakmie Goreng Kepo", desc: "Bakmie goreng dengan topping ayam fillet, sosis, baso ikan dan telur dadar.", price: 0, image: "gambar-mlg/nasgorkepo-bakmie-goreng-kepo.jpg", emoji: "🍛" },
-      { id: "kepo-9", name: "Bakmie Goreng Ayam", desc: "Bakmie goreng dengan isi ayam fillet, sayur sawi hijau dan gubis lengkap.", price: 0, image: "gambar-mlg/nasgorkepo-bakmie-goreng-ayam.jpg", emoji: "🍛" },
-      { id: "kepo-10", name: "Bakmie Goreng Baso Ikan", desc: "Bakmie goreng dengan isi baso ikan, sayur sawi hijau dan gubis lengkap.", price: 0, image: "gambar-mlg/nasgorkepo-bakmie-goreng-baso-ikan.jpg", emoji: "🍛" },
-      { id: "kepo-11", name: "Bihun Goreng", desc: "Bihun goreng dengan isi baso ikan, ayam fillet, sosis, sayur sawi hijau dan gubis.", price: 0, image: "gambar-mlg/nasgorkepo-bihun-goreng.jpg", emoji: "🍛" },
-      { id: "kepo-12", name: "Capcay", desc: "Capcay goreng dengan sayuran lengkap dan topping baso ikan, sosis, ayam fillet.", price: 0, image: "gambar-mlg/nasgorkepo-capcay.jpg", emoji: "🍛" }
+      { id: "kepo-9", name: "Bakmie Goreng Ayam", desc: "Bakmie goreng dengan isi ayam fillet, sayur sawi hijau dan gubis lengkap.", price: 11500, image: "gambar-mlg/nasgorkepo-bakmie-goreng-ayam.jpg", emoji: "🍛" },
+      { id: "kepo-10", name: "Bakmie Goreng Baso Ikan", desc: "Bakmie goreng dengan isi baso ikan, sayur sawi hijau dan gubis lengkap.", price: 12000, image: "gambar-mlg/nasgorkepo-bakmie-goreng-baso-ikan.jpg", emoji: "🍛" },
+      { id: "kepo-11", name: "Bihun Goreng", desc: "Bihun goreng dengan isi baso ikan, ayam fillet, sosis, sayur sawi hijau dan gubis.", price: 14400, image: "gambar-mlg/nasgorkepo-bihun-goreng.jpg", emoji: "🍛" },
+      { id: "kepo-12", name: "Capcay", desc: "Capcay goreng dengan sayuran lengkap dan topping baso ikan, sosis, ayam fillet.", price: 14400, image: "gambar-mlg/nasgorkepo-capcay.jpg", emoji: "🍛" }
     ]
   },
   {
@@ -384,7 +443,7 @@ const RESTAURANTS = [
     banner: "",
     emoji: "🍗",
     products: [
-      { id: "agb-1", name: "Ayam Gowang", desc: "Ayam Goreng Bawang + Kremes + Nasi + Sambal + Lalapan", price: 0, image: "gambar-mlg/agb-ayam-gowang.jpg", emoji: "🍗" }
+      { id: "agb-1", name: "Ayam Gowang", desc: "Ayam Goreng Bawang + Kremes + Nasi + Sambal + Lalapan", price: 13500, image: "gambar-mlg/agb-ayam-gowang.jpg", emoji: "🍗" }
     ]
   }
 ];
@@ -406,7 +465,7 @@ function optLabel(p, v) {
 
 function imageOrEmoji(src, emoji) {
   return src
-    ? `<img src="${src}" alt="" onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<span>${emoji}</span>')">`
+    ? `<img loading="lazy" decoding="async" src="${src}" alt="" onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<span>${emoji}</span>')">`
     : emoji;
 }
 
@@ -654,6 +713,39 @@ function sendWhatsApp(){
 }
 
 render();
+</script>
+<script>
+(function(){
+  var box=document.getElementById('products'),q=document.getElementById('q'),chips=document.getElementById('chips'),empty=document.getElementById('empty'),busy=false;
+  try{document.getElementById('footWa').href='https://wa.me/'+STORE_WA}catch(e){}
+  document.getElementById('yr').textContent=new Date().getFullYear();
+  function norm(t){return (t||'').toLowerCase()}
+  function apply(){
+    var k=norm(q.value).trim(),shown=0;
+    document.querySelectorAll('.restaurantSection').forEach(function(sec){
+      var rn=norm(sec.querySelector('h2')&&sec.querySelector('h2').textContent),hit=0;
+      sec.querySelectorAll('.card').forEach(function(c){
+        var ok=!k||rn.indexOf(k)>-1||norm(c.textContent).indexOf(k)>-1;
+        c.style.display=ok?'':'none'; if(ok)hit++;
+      });
+      sec.style.display=hit?'':'none'; shown+=hit;
+    });
+    empty.classList.toggle('show',!shown);
+  }
+  function build(){
+    chips.innerHTML='';
+    document.querySelectorAll('.restaurantSection').forEach(function(sec,i){
+      sec.id='resto-'+i;
+      var b=document.createElement('button');b.className='chip';b.type='button';
+      b.textContent=sec.querySelector('h2').textContent.trim();
+      b.onclick=function(){q.value='';apply();sec.scrollIntoView({behavior:'smooth'})};
+      chips.appendChild(b);
+    });
+  }
+  q.addEventListener('input',apply);
+  new MutationObserver(function(){ if(busy)return; busy=true; setTimeout(function(){build();apply();busy=false},0) }).observe(box,{childList:true});
+  build();apply();
+})();
 </script>
 </body>
 </html>
