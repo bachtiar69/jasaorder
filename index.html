@@ -28,6 +28,7 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdro
 .restaurantIcon{width:50px;height:50px;border-radius:15px;overflow:hidden;background:#fff0df;display:grid;place-items:center;font-size:27px;flex:none}
 .restaurantIcon img{width:100%;height:100%;object-fit:cover}
 .restaurantHeader h2{margin:0 0 3px;font-size:22px}.restaurantHeader span{font-size:13px;color:#777}
+.restoNotice{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;border-radius:14px;padding:12px 14px;font-size:13px;font-weight:700;margin-bottom:14px;line-height:1.5}
 .restaurantBanner{width:100%;height:170px;object-fit:cover;border-radius:20px;margin-bottom:14px;background:#eee;display:block}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
 .card{background:white;border:1px solid #eee;border-radius:20px;overflow:hidden;box-shadow:0 5px 20px #00000008}
@@ -241,7 +242,9 @@ document.addEventListener('click',function(e){
 
     <div class="field">
       <label>Nomor WhatsApp yang bisa dihubungi</label>
-      <input id="phone" type="tel" placeholder="Contoh: 0895xxxxxxxx">
+      <input id="phone" oninput="phoneHint()" type="tel" placeholder="Contoh: 0895xxxxxxxx">
+      <div class="locRow" style="margin-top:8px"><button class="locBtn" type="button" onclick="cekNomor()">🔍 Cek nomor</button></div>
+      <div class="status" id="phoneStatus"></div>
     </div>
 
     <div class="field">
@@ -287,6 +290,20 @@ CITY_DATA.probolinggo = [
       {id:"gacoan-8",name:"Es Gobak Sodor",desc:"Nata de coco, jelly, dan irisan strawberry",price:10000,image:"images/es-gobak-sodor.jpg",emoji:"🍹"},
       {id:"gacoan-9",name:"Thai Tea",desc:"Teh Thailand manis dan creamy",price:10000,image:"images/thai-tea.jpg",emoji:"🧋"},
       {id:"gacoan-10",name:"Thai Green Tea",desc:"Teh hijau Thailand manis dan creamy",price:10000,image:"images/thai-green-tea.jpg",emoji:"🍵"}
+    ]
+  },
+
+  {
+    id:"point",
+    name:"Point Coffee",
+    logo:"images/point-iced-oat-cappucino.jpg",
+    banner:"",
+    emoji:"☕",
+    products:[
+      {id:"point-1",name:"Iced Oat Cappucino",desc:"Minuman kopi dengan cita rasa espresso yang dominan, dipadukan dengan oatmilk.",price:15500,image:"images/point-iced-oat-cappucino.jpg",emoji:"☕"},
+      {id:"point-2",name:"Iced Oat Aren Latte",desc:"Minuman kopi dingin dengan oat milk dan gula aren khas Point Coffee",price:15500,image:"images/point-iced-oat-aren-latte.jpg",emoji:"☕"},
+      {id:"point-3",name:"Kopi Pandan",desc:"Perpaduan antara susu segar, pandan dan satu shot espresso tanpa gula",price:15000,image:"images/point-kopi-pandan.jpg",emoji:"🧋"},
+      {id:"point-4",name:"Es Loreng",desc:"Perpaduan antara susu segar dan gula aren dengan topping brown sugar konyaku",price:15000,image:"images/point-es-loreng.jpg",emoji:"🧋"}
     ]
   },
 
@@ -397,12 +414,57 @@ CITY_DATA.malang = [
     banner: "",
     emoji: "🍱",
     products: [
-      { id: "dikichi-1", name: "Crispy Original", desc: "Ayam crispy gurih, renyah di luar & juicy di dalam. Tidak pedas, cocok untuk semua.", price: 12000, image: "gambar-mlg/dikichi-crispy-original.jpg", emoji: "🍗" },
-      { id: "dikichi-2", name: "Crispy Hot", desc: "Ayam crispy renyah di luar & juicy di dalam. Cocok untuk pecinta rasa gurih & pedas.", price: 13000, image: "gambar-mlg/dikichi-crispy-hot.jpg", emoji: "🍗" },
+      { id: "dikichi-1", name: "Crispy Original", desc: "Ayam crispy gurih, renyah di luar & juicy di dalam. Tidak pedas, cocok untuk semua.", price: 13500, image: "gambar-mlg/dikichi-crispy-original.jpg", emoji: "🍗" },
+      { id: "dikichi-2", name: "Crispy Hot", desc: "Ayam crispy renyah di luar & juicy di dalam. Cocok untuk pecinta rasa gurih & pedas.", price: 15000, image: "gambar-mlg/dikichi-crispy-hot.jpg", emoji: "🍗" },
       { id: "dikichi-3", name: "Sundae", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Chocolate, Oreo, Strawberry.", price: 10000, image: "gambar-mlg/dikichi-sundae.jpg", emoji: "🍨", variants: ["Coklat", "Oreo", "Strawberry"] },
       { id: "dikichi-4", name: "Twizzy", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Hokkaido Matcha, Red Velvet, Silky Ube.", price: 10000, image: "gambar-mlg/dikichi-twizzy.jpg", emoji: "🍦", variants: ["Matcha", "Ube", "Red Velvet"] }
     ]
   },
+
+  {
+    id:"point",
+    name:"Point Coffee",
+    logo:"images/point-iced-oat-cappucino.jpg",
+    banner:"",
+    emoji:"☕",
+    products:[
+      {id:"point-1",name:"Iced Oat Cappucino",desc:"Minuman kopi dengan cita rasa espresso yang dominan, dipadukan dengan oatmilk.",price:16500,image:"images/point-iced-oat-cappucino.jpg",emoji:"☕"},
+      {id:"point-2",name:"Iced Oat Aren Latte",desc:"Minuman kopi dingin dengan oat milk dan gula aren khas Point Coffee",price:16500,image:"images/point-iced-oat-aren-latte.jpg",emoji:"☕"},
+      {id:"point-3",name:"Kopi Pandan",desc:"Perpaduan antara susu segar, pandan dan satu shot espresso tanpa gula",price:16000,image:"images/point-kopi-pandan.jpg",emoji:"🧋"},
+      {id:"point-4",name:"Es Loreng",desc:"Perpaduan antara susu segar dan gula aren dengan topping brown sugar konyaku",price:16000,image:"images/point-es-loreng.jpg",emoji:"🧋"}
+    ]
+  },
+
+
+  {
+    id:"mixue",
+    name:"Resto Mixue",
+    logo:"images/blueberry-sundae.jpg",
+    banner:"",
+    emoji:"🍦",
+    notice: "⚠️ Peringatan: MIXUE daerah Malang mungkin harga berbeda, nanti akan di konfirmasi lewat Whatsapp.",
+    products:[
+      {id:"mixue-1",name:"Blueberry Sundae",desc:"Es krim lembut dengan saus blueberry",price:11000,image:"images/blueberry-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-2",name:"Yellow Peach Sundae",desc:"Es krim lembut dengan topping peach kuning",price:11000,image:"images/yellow-peach-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-3",name:"Peach Sundae",desc:"Es krim lembut dengan topping peach",price:11000,image:"images/peach-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-4",name:"Kiwi Sundae",desc:"Es krim lembut dengan topping kiwi",price:11000,image:"images/kiwi-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-5",name:"Strawberry Lucky Sundae",desc:"Es krim dengan selai strawberry dan topping kejutan",price:11000,image:"images/strawberry-lucky-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-6",name:"Strawberry Sundae",desc:"Es krim lembut dengan saus strawberry",price:11000,image:"images/strawberry-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-7",name:"Chocolate Cookies Sundae",desc:"Es krim dengan remahan cookies cokelat",price:11000,image:"images/chocolate-cookies-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-8",name:"Boba Sundae",desc:"Es krim dengan boba kenyal dan saus cokelat",price:11000,image:"images/boba-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-9",name:"Mango Sundae",desc:"Es krim dengan potongan dan sirup mangga",price:11000,image:"images/mango-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-10",name:"Creamy Blueberry",desc:"Minuman creamy blueberry yang segar",price:11000,image:"images/creamy-blueberry.jpg",emoji:"🧋"},
+      {id:"mixue-11",name:"Milky Fruity Berry",desc:"Campuran strawberry dan susu dengan jelly",price:11000,image:"images/milky-fruity-berry.jpg",emoji:"🧋"},
+      {id:"mixue-12",name:"Milky Fruity Kiwi",desc:"Campuran kiwi dan susu dengan jelly peach",price:11000,image:"images/milky-fruity-kiwi.jpg",emoji:"🧋"},
+      {id:"mixue-13",name:"Blueberry Jasmine Tea",desc:"Teh melati dengan blueberry segar",price:11000,image:"images/blueberry-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-14",name:"Strawberry Peach Jasmine Tea",desc:"Teh melati dengan strawberry dan peach",price:11000,image:"images/strawberry-peach-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-15",name:"Peach Jasmine Tea",desc:"Teh melati wangi dengan irisan peach",price:11000,image:"images/peach-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-16",name:"Vitamin C Kiwi Tea",desc:"Teh kiwi segar dengan jelly kelapa",price:11000,image:"images/vitamin-c-kiwi-tea.jpg",emoji:"🍹"},
+      {id:"mixue-17",name:"Latte",desc:"Espresso halus dengan susu creamy",price:11000,image:"images/latte.jpg",emoji:"☕"}
+    ]
+  },
+
+
   {
     id:"gacoan",
     name:"Resto Gacoan",
@@ -637,7 +699,66 @@ CITY_DATA.jember = [
       {id:"gacoan-9",name:"Thai Tea",desc:"Teh Thailand manis dan creamy",price:10000,image:"images/thai-tea.jpg",emoji:"🧋"},
       {id:"gacoan-10",name:"Thai Green Tea",desc:"Teh hijau Thailand manis dan creamy",price:10000,image:"images/thai-green-tea.jpg",emoji:"🍵"}
     ]
-  }
+  },
+
+  {
+    id:"point",
+    name:"Point Coffee",
+    logo:"images/point-iced-oat-cappucino.jpg",
+    banner:"",
+    emoji:"☕",
+    products:[
+      {id:"point-1",name:"Iced Oat Cappucino",desc:"Minuman kopi dengan cita rasa espresso yang dominan, dipadukan dengan oatmilk.",price:16500,image:"images/point-iced-oat-cappucino.jpg",emoji:"☕"},
+      {id:"point-2",name:"Iced Oat Aren Latte",desc:"Minuman kopi dingin dengan oat milk dan gula aren khas Point Coffee",price:16500,image:"images/point-iced-oat-aren-latte.jpg",emoji:"☕"},
+      {id:"point-3",name:"Kopi Pandan",desc:"Perpaduan antara susu segar, pandan dan satu shot espresso tanpa gula",price:16000,image:"images/point-kopi-pandan.jpg",emoji:"🧋"},
+      {id:"point-4",name:"Es Loreng",desc:"Perpaduan antara susu segar dan gula aren dengan topping brown sugar konyaku",price:16000,image:"images/point-es-loreng.jpg",emoji:"🧋"}
+    ]
+  },
+
+  {
+    id: "dikichi",
+    name: "Dikichi",
+    logo: "",
+    banner: "",
+    emoji: "🍱",
+    notice: "⚠️ Peringatan: Dikichi di Jember tidak bisa mengantar ke semua daerah. Pastikan alamat kamu masuk jangkauan — kami akan konfirmasi via WhatsApp sebelum pesanan diproses.",
+    products: [
+      { id: "dikichi-1", name: "Crispy Original", desc: "Ayam crispy gurih, renyah di luar & juicy di dalam. Tidak pedas, cocok untuk semua.", price: 12000, image: "gambar-mlg/dikichi-crispy-original.jpg", emoji: "🍗" },
+      { id: "dikichi-2", name: "Crispy Hot", desc: "Ayam crispy renyah di luar & juicy di dalam. Cocok untuk pecinta rasa gurih & pedas.", price: 13000, image: "gambar-mlg/dikichi-crispy-hot.jpg", emoji: "🍗" },
+      { id: "dikichi-3", name: "Sundae", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Chocolate, Oreo, Strawberry.", price: 10000, image: "gambar-mlg/dikichi-sundae.jpg", emoji: "🍨", variants: ["Coklat", "Oreo", "Strawberry"] },
+      { id: "dikichi-4", name: "Twizzy", desc: "Ice cream lembut & creamy, manis & menyegarkan. Tersedia 3 varian: Hokkaido Matcha, Red Velvet, Silky Ube.", price: 10000, image: "gambar-mlg/dikichi-twizzy.jpg", emoji: "🍦", variants: ["Matcha", "Ube", "Red Velvet"] }
+    ]
+  },
+
+  {
+    id:"mixue",
+    name:"Resto Mixue",
+    logo:"images/blueberry-sundae.jpg",
+    banner:"",
+    emoji:"🍦",
+    notice: "⚠️ Peringatan: MIXUE daerah Jember mungkin harga berbeda, nanti akan di konfirmasi lewat Whatsapp.",
+    products:[
+      {id:"mixue-1",name:"Blueberry Sundae",desc:"Es krim lembut dengan saus blueberry",price:11000,image:"images/blueberry-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-2",name:"Yellow Peach Sundae",desc:"Es krim lembut dengan topping peach kuning",price:11000,image:"images/yellow-peach-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-3",name:"Peach Sundae",desc:"Es krim lembut dengan topping peach",price:11000,image:"images/peach-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-4",name:"Kiwi Sundae",desc:"Es krim lembut dengan topping kiwi",price:11000,image:"images/kiwi-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-5",name:"Strawberry Lucky Sundae",desc:"Es krim dengan selai strawberry dan topping kejutan",price:11000,image:"images/strawberry-lucky-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-6",name:"Strawberry Sundae",desc:"Es krim lembut dengan saus strawberry",price:11000,image:"images/strawberry-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-7",name:"Chocolate Cookies Sundae",desc:"Es krim dengan remahan cookies cokelat",price:11000,image:"images/chocolate-cookies-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-8",name:"Boba Sundae",desc:"Es krim dengan boba kenyal dan saus cokelat",price:11000,image:"images/boba-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-9",name:"Mango Sundae",desc:"Es krim dengan potongan dan sirup mangga",price:11000,image:"images/mango-sundae.jpg",emoji:"🍦"},
+      {id:"mixue-10",name:"Creamy Blueberry",desc:"Minuman creamy blueberry yang segar",price:11000,image:"images/creamy-blueberry.jpg",emoji:"🧋"},
+      {id:"mixue-11",name:"Milky Fruity Berry",desc:"Campuran strawberry dan susu dengan jelly",price:11000,image:"images/milky-fruity-berry.jpg",emoji:"🧋"},
+      {id:"mixue-12",name:"Milky Fruity Kiwi",desc:"Campuran kiwi dan susu dengan jelly peach",price:11000,image:"images/milky-fruity-kiwi.jpg",emoji:"🧋"},
+      {id:"mixue-13",name:"Blueberry Jasmine Tea",desc:"Teh melati dengan blueberry segar",price:11000,image:"images/blueberry-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-14",name:"Strawberry Peach Jasmine Tea",desc:"Teh melati dengan strawberry dan peach",price:11000,image:"images/strawberry-peach-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-15",name:"Peach Jasmine Tea",desc:"Teh melati wangi dengan irisan peach",price:11000,image:"images/peach-jasmine-tea.jpg",emoji:"🍹"},
+      {id:"mixue-16",name:"Vitamin C Kiwi Tea",desc:"Teh kiwi segar dengan jelly kelapa",price:11000,image:"images/vitamin-c-kiwi-tea.jpg",emoji:"🍹"},
+      {id:"mixue-17",name:"Latte",desc:"Espresso halus dengan susu creamy",price:11000,image:"images/latte.jpg",emoji:"☕"}
+    ]
+  },
+
+
 ];
 
 
@@ -679,6 +800,8 @@ function render() {
           <span>${r.products.length} pilihan menu</span>
         </div>
       </div>
+
+      ${r.notice ? `<div class="restoNotice">${r.notice}</div>` : ""}
 
       ${r.banner ? `
         <img class="restaurantBanner"
@@ -862,6 +985,38 @@ function getLocation() {
   );
 }
 
+// Rapikan nomor: 0812xxxx / +62812xxxx / 812xxxx -> 62812xxxx. Kembali null jika tidak valid.
+function normPhone(raw){
+  let d = (raw || "").replace(/[^\d]/g, "");
+  if(d.startsWith("620")) d = "62" + d.slice(3);
+  else if(d.startsWith("0")) d = "62" + d.slice(1);
+  else if(d.startsWith("8")) d = "62" + d;
+  return /^62\d{9,13}$/.test(d) ? d : null;
+}
+function fmtPhone(n){
+  return "+62 " + n.slice(2).replace(/^(\d{3})(\d{4})(\d+)$/, "$1-$2-$3");
+}
+function phoneHint(){
+  const raw = document.getElementById("phone").value.trim();
+  const st = document.getElementById("phoneStatus");
+  if(!raw){ st.textContent = ""; return; }
+  const n = normPhone(raw);
+  st.style.color = n ? "#15803d" : "#b91c1c";
+  st.textContent = n ? "✅ " + fmtPhone(n) : "❌ Nomor belum valid. Contoh: 0812xxxxxxxx";
+}
+function cekNomor(){
+  const n = normPhone(document.getElementById("phone").value);
+  const st = document.getElementById("phoneStatus");
+  if(!n){
+    st.style.color = "#b91c1c";
+    st.textContent = "❌ Nomor belum valid. Contoh: 0812xxxxxxxx";
+    return;
+  }
+  st.style.color = "#15803d";
+  st.textContent = "✅ " + fmtPhone(n) + " · WhatsApp dibuka, pastikan chat bisa terbuka (jika muncul peringatan, nomor belum terdaftar)";
+  window.open("https://wa.me/" + n, "_blank");
+}
+
 function sendWhatsApp(){
   const name=document.getElementById("name").value.trim();
   const phone=document.getElementById("phone").value.trim();
@@ -871,6 +1026,13 @@ function sendWhatsApp(){
     alert("Nama dan nomor WhatsApp wajib diisi.");
     return;
   }
+
+  const phoneN = normPhone(phone);
+  if(!phoneN){
+    alert("Nomor WhatsApp belum valid. Contoh: 0812xxxxxxxx");
+    return;
+  }
+  if(!confirm("Nomor WhatsApp kamu: " + fmtPhone(phoneN) + "\n\nSudah benar?")) return;
 
   const items=getCartItems();
   let total=0;
@@ -896,7 +1058,7 @@ function sendWhatsApp(){
   message+=plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
   if(locationLink) message+=`🔗 *Link Maps:* ${locationLink}\n`;
   message+=`\n👤 *Nama:* ${name}\n`+
-    `📞 *WhatsApp:* ${phone}\n`+
+    `📞 *WhatsApp:* ${fmtPhone(phoneN)}\n`+
     `🏠 *Ancer-ancer:* ${landmark || "-"}\n\n`+
     `🙏 *Untuk driver:* mohon hubungi saya lewat *chat WhatsApp* di nomor di atas ya saat sudah dekat/sampai atau jika ada kendala. Terima kasih banyak, om 🙏`;
 
