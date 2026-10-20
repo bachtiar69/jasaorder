@@ -45,7 +45,7 @@
               `;
 
               let title = "MAAF, JASTIP SEDANG TUTUP";
-              let desc = "Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!";
+              let desc = "Toko kami sedang libur atau tutup sementara. Kamu tetap bisa membuat pesanan (Pre-Order) untuk nanti ya!";
               let timerHTML = "";
 
               if (data.status === "antri" && data.remainingSeconds > 0) {
@@ -70,7 +70,6 @@
               document.body.appendChild(overlay);
               document.body.style.overflow = 'hidden';
 
-              // Jalankan Countdown Real-time jika dalam mode antri
               if (data.status === "antri" && data.remainingSeconds > 0) {
                 let secLeft = data.remainingSeconds;
                 if (countdownInterval) clearInterval(countdownInterval);
@@ -81,7 +80,7 @@
                   if (timerElem) {
                     if (secLeft <= 0) {
                       clearInterval(countdownInterval);
-                      location.reload(); // Otomatis reload & buka web saat waktu habis
+                      location.reload();
                     } else {
                       timerElem.innerText = `⏳ ${formatTime(secLeft)}`;
                     }
@@ -108,7 +107,7 @@
       applyStoreStatus();
     }
 
-    setInterval(applyStoreStatus, 10000); // Sinkronisasi ulang ke server setiap 10 detik
+    setInterval(applyStoreStatus, 10000);
   })();
 </script>
   
@@ -158,7 +157,7 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdro
 .modal.show{display:flex}.sheet{background:#fff;width:min(650px,100%);max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:22px}
 .close{float:right;border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer}
 .field{margin:14px 0}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:7px}
-.field input,.field textarea{width:100%;padding:12px 13px;border:1px solid #ddd;border-radius:12px;font:inherit}
+.field input,.field textarea,.field select{width:100%;padding:12px 13px;border:1px solid #ddd;border-radius:12px;font:inherit}
 .field textarea{min-height:75px;resize:vertical}.locRow{display:flex;gap:8px}.locBtn{border:0;background:#111;color:#fff;border-radius:12px;padding:12px;font-weight:800;cursor:pointer}
 .status{font-size:13px;margin-top:7px;color:#16a34a}.order{background:#f7f7f7;border-radius:14px;padding:12px;margin:16px 0}
 .orderLine{display:flex;justify-content:space-between;margin:7px 0;gap:10px}.total{font-size:20px;font-weight:900;border-top:1px solid #ddd;padding-top:10px;margin-top:10px}
@@ -351,6 +350,24 @@ document.addEventListener('click',function(e){
     <h2 style="margin-top:0">🧾 Checkout</h2>
 
     <div id="orderBox"></div>
+
+    <div class="field">
+      <label>⏰ Waktu Pengiriman / Jam Pre-Order (Minimal Pukul 10.00 Pagi)</label>
+      <select id="orderTime">
+        <option value="Secepatnya (Jika Toko Buka)">⚡ Kirim Secepatnya (Jika Toko Buka)</option>
+        <option value="Pukul 10:00 Pagi">⏰ Pukul 10:00 Pagi</option>
+        <option value="Pukul 11:00 Pagi">⏰ Pukul 11:00 Pagi</option>
+        <option value="Pukul 12:00 Siang">⏰ Pukul 12:00 Siang</option>
+        <option value="Pukul 13:00 Siang">⏰ Pukul 13:00 Siang</option>
+        <option value="Pukul 14:00 Siang">⏰ Pukul 14:00 Siang</option>
+        <option value="Pukul 15:00 Sore">⏰ Pukul 15:00 Sore</option>
+        <option value="Pukul 16:00 Sore">⏰ Pukul 16:00 Sore</option>
+        <option value="Pukul 17:00 Sore">⏰ Pukul 17:00 Sore</option>
+        <option value="Pukul 18:00 Malam">⏰ Pukul 18:00 Malam</option>
+        <option value="Pukul 19:00 Malam">⏰ Pukul 19:00 Malam</option>
+        <option value="Pukul 20:00 Malam">⏰ Pukul 20:00 Malam</option>
+      </select>
+    </div>
 
     <div class="field">
       <label>Nama pembeli</label>
@@ -858,19 +875,15 @@ CITY_DATA.jember = [
   }
 ];
 
-// =====================================================================
-// KONFIGURASI DAERAH & PENAMBAHAN RESTO
-// =====================================================================
 const clone = o => JSON.parse(JSON.stringify(o));
 const getResto = (city, id) => CITY_DATA[city].find(r => r.id === id);
 
-// --- Kota baru: Surabaya & Sidoarjo ---
 CITIES.surabaya = {name:"Surabaya",emoji:"🍜",badge:"JASTIP SURABAYA",title:"Jajanan Surabaya<br>Siap Diantar.",text:"Pilih restoran favorit di Surabaya, pilih menu, checkout, lalu pesan via WhatsApp.",listTitle:"🍽️ Pilih Restoran Surabaya",listSub:"Daftar Resto Pilihan"};
 CITIES.sidoarjo = {name:"Sidoarjo",emoji:"🍜",badge:"JASTIP SIDOARJO",title:"Jajanan Sidoarjo<br>Siap Diantar.",text:"Pilih restoran favorit di Sidoarjo, pilih menu, checkout, lalu pesan via WhatsApp.",listTitle:"🍽️ Pilih Restoran Sidoarjo",listSub:"Daftar Resto Pilihan"};
 
-const SBY_GACOAN_PRICE = 13500;   // Gacoan: semua pcs 13.500
-const SBY_DIKICHI_DISKON = 1500;  // Dikichi: harga Malang - 1500
-const SBY_MIXUE_PRICE = 12000;    // Mixue: 12k menu sama aja
+const SBY_GACOAN_PRICE = 13500;
+const SBY_DIKICHI_DISKON = 1500;
+const SBY_MIXUE_PRICE = 12000;
 
 function buildSurabayaSidoarjo(){
   const gacoan = clone(getResto("malang","gacoan"));
@@ -890,7 +903,6 @@ function buildSurabayaSidoarjo(){
 CITY_DATA.surabaya = buildSurabayaSidoarjo();
 CITY_DATA.sidoarjo = buildSurabayaSidoarjo();
 
-// --- Udang Rambutan di Resto Gacoan semua kota ---
 const UDANG_RAMBUTAN_IMG = "https://huawei-food-cms.grab.com/compressed_avif/items/url-cc4355f4/photo/c3d192e5d1ccbdc9.avif";
 Object.keys(CITY_DATA).forEach(city => {
   const g = getResto(city,"gacoan");
@@ -907,7 +919,6 @@ Object.keys(CITY_DATA).forEach(city => {
   g.products.splice(i > -1 ? i + 1 : g.products.length, 0, item);
 });
 
-// --- Martabak MPR di semua kota ---
 const MPR_DISKON = 7000;
 const MPR_TAMBAHAN = {probolinggo:0, jember:0, malang:2000, surabaya:2000, sidoarjo:2000};
 const MPR_MENU = [
@@ -1221,6 +1232,7 @@ function cekNomor(){
 }
 
 function sendWhatsApp(){
+  const orderTime=document.getElementById("orderTime").value;
   const name=document.getElementById("name").value.trim();
   const phone=document.getElementById("phone").value.trim();
   const landmark=document.getElementById("landmark").value.trim();
@@ -1256,6 +1268,7 @@ function sendWhatsApp(){
   });
 
   message+=`*Total:* ${rupiah(total)}\n`;
+  message+=`⏰ *Jadwal Kirim:* ${orderTime}\n`;
   message+=`📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
   message+=plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
   if(locationLink) message+=`🔗 *Link Maps:* ${locationLink}\n`;
