@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JASTIP BAHCTIAR</title>
-<meta name="description" content="Jastip makanan dan minuman Probolinggo, Malang &amp; Jember. Pilih restoran dan menu, checkout, lalu pesan langsung via WhatsApp.">
+<meta name="description" content="Jastip makanan dan minuman Probolinggo, Malang, Jember, Surabaya &amp; Sidoarjo. Pilih restoran dan menu, checkout, lalu pesan langsung via WhatsApp.">
 <meta name="theme-color" content="#171717">
 <meta property="og:type" content="website">
 <meta property="og:title" content="JASTIP BAHCTIAR - Pesan Makanan via WhatsApp">
-<meta property="og:description" content="Jastip makanan dan minuman Probolinggo, Malang &amp; Jember. Pilih restoran dan menu, checkout, lalu pesan langsung via WhatsApp.">
+<meta property="og:description" content="Jastip makanan dan minuman Probolinggo, Malang, Jember, Surabaya &amp; Sidoarjo. Pilih restmproran dan menu, checkout, lalu pesan langsung via WhatsApp.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍴%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box}
@@ -39,7 +39,7 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdro
 .add{width:100%;border:0;background:#f97316;color:white;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}
 .add:active{transform:scale(.98)}
 .toast{position:fixed;top:78px;left:50%;transform:translateX(-50%) translateY(-20px);background:#171717;color:#fff;padding:12px 18px;border-radius:999px;font-weight:800;z-index:60;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.editRow{display:flex;align-items:center;gap:8px;margin-top:8px}.qtyBtn{border:0;background:#eee;border-radius:9px;width:32px;height:32px;font-size:18px;font-weight:900;cursor:pointer}.removeBtn{margin-left:auto;border:0;background:#fee2e2;color:#b91c1c;border-radius:9px;padding:7px 10px;font-weight:800;cursor:pointer}
+.editRow{display:flex;align-items:center;gap:8px;margin-top:8px}.qtyBtn{border:0;background:#eee;border-radius:999px;width:32px;height:32px;font-size:18px;font-weight:900;cursor:pointer}.removeBtn{margin-left:auto;border:0;background:#fee2e2;color:#b91c1c;border-radius:9px;padding:7px 10px;font-weight:800;cursor:pointer}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #eee;padding:12px 18px;z-index:20}
 .bottomIn{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
 .checkout{border:0;background:#16a34a;color:white;padding:13px 20px;border-radius:13px;font-weight:900;cursor:pointer}
@@ -74,7 +74,7 @@ body.locked{overflow:hidden}
 .cityLink{display:inline-block;margin-top:14px;border:1px solid #ffffff4d;background:#ffffff14;color:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
 .cityLink:hover{background:#ffffff26}
 
-/* ===== Pemilih Kota (pojok kiri atas) ===== */
+/* ===== Pemilih Kota ===== */
 .navLeft{display:flex;align-items:center;gap:12px;min-width:0}
 .cityPick{position:relative;flex:none}
 .cityBtn{border:1px solid #e5e5e5;background:#fff;border-radius:999px;padding:9px 13px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;color:#171717}
@@ -134,10 +134,16 @@ html{scroll-behavior:smooth}
         <span><b>Jember</b><small>Jajanan Jember siap diantar</small></span>
         <span class="kotaTag">BUKA</span>
       </button>
-    </div>
-    <div class="kotaNotice">
-      <span class="nTitle">📢 Info untuk Sidoarjo &amp; Surabaya</span>
-      Kamu juga bisa pesan <b>Dikichi</b> lewat menu <b>Malang</b>, lho! Tinggal klik kartu Malang di atas, <b>harganya sama persis</b> ya!
+      <button class="kotaCard" onclick="pilihKota('surabaya')">
+        <span class="kotaEmoji">🍜</span>
+        <span><b>Surabaya</b><small>Jajanan Surabaya siap diantar</small></span>
+        <span class="kotaTag">BUKA</span>
+      </button>
+      <button class="kotaCard" onclick="pilihKota('sidoarjo')">
+        <span class="kotaEmoji">🍜</span>
+        <span><b>Sidoarjo</b><small>Jajanan Sidoarjo siap diantar</small></span>
+        <span class="kotaTag">BUKA</span>
+      </button>
     </div>
   </div>
 </div>
@@ -147,13 +153,12 @@ html{scroll-behavior:smooth}
   var qs=new URLSearchParams(location.search), s=null;
   try{s=sessionStorage.getItem('kota')}catch(e){}
   var k=(qs.get('kota')||location.hash.replace('#','')||s||'').toLowerCase();
-  if(['probolinggo','malang','jember'].indexOf(k)>-1 && !qs.has('pilih')){
+  if(['probolinggo','malang','jember','surabaya','sidoarjo'].indexOf(k)>-1 && !qs.has('pilih')){
     window.__kota=k; ov.classList.remove('show');
     try{sessionStorage.setItem('kota',k)}catch(e){}
-  } else { window.__kota=(['probolinggo','malang','jember'].indexOf(k)>-1?k:'probolinggo'); document.body.classList.add('locked'); }
+  } else { window.__kota=(['probolinggo','malang','jember','surabaya','sidoarjo'].indexOf(k)>-1?k:'probolinggo'); document.body.classList.add('locked'); }
 })();
 </script>
-
 
 <header>
   <div class="nav">
@@ -164,6 +169,8 @@ html{scroll-behavior:smooth}
         <a href="#probolinggo" data-city="probolinggo" onclick="toggleCityMenu(event,true);pilihKota('probolinggo')">📍 Probolinggo</a>
         <a href="#malang" data-city="malang" onclick="toggleCityMenu(event,true);pilihKota('malang')">📍 Malang</a>
         <a href="#jember" data-city="jember" onclick="toggleCityMenu(event,true);pilihKota('jember')">📍 Jember</a>
+        <a href="#surabaya" data-city="surabaya" onclick="toggleCityMenu(event,true);pilihKota('surabaya')">📍 Surabaya</a>
+        <a href="#sidoarjo" data-city="sidoarjo" onclick="toggleCityMenu(event,true);pilihKota('sidoarjo')">📍 Sidoarjo</a>
       </div>
     </div>
     <div class="brand">🍴 <span>JASTIP</span> BAHCTIAR</div>
@@ -211,11 +218,10 @@ document.addEventListener('click',function(e){
   <div id="products"></div>
 </main>
 
-
 <footer class="footer">
   <div class="footerIn">
     <div><div class="brand">🍴 <span>JASTIP</span> BAHCTIAR</div><p>Layanan jastip makanan dan minuman. Pilih menu, checkout, lalu pesan langsung lewat WhatsApp.</p></div>
-    <div><h4>Pilih Kota</h4><a href="#probolinggo" data-city="probolinggo" onclick="pilihKota('probolinggo');window.scrollTo(0,0);return false">Probolinggo</a><a href="#malang" data-city="malang" onclick="pilihKota('malang');window.scrollTo(0,0);return false">Malang</a><a href="#jember" data-city="jember" onclick="pilihKota('jember');window.scrollTo(0,0);return false">Jember</a></div>
+    <div><h4>Pilih Kota</h4><a href="#probolinggo" data-city="probolinggo" onclick="pilihKota('probolinggo');window.scrollTo(0,0);return false">Probolinggo</a><a href="#malang" data-city="malang" onclick="pilihKota('malang');window.scrollTo(0,0);return false">Malang</a><a href="#jember" data-city="jember" onclick="pilihKota('jember');window.scrollTo(0,0);return false">Jember</a><a href="#surabaya" data-city="surabaya" onclick="pilihKota('surabaya');window.scrollTo(0,0);return false">Surabaya</a><a href="#sidoarjo" data-city="sidoarjo" onclick="pilihKota('sidoarjo');window.scrollTo(0,0);return false">Sidoarjo</a></div>
     <div><h4>Hubungi Kami</h4><a id="footWa" href="#" target="_blank" rel="noopener">💬 Chat WhatsApp</a></div>
   </div>
   <div class="copy">© <span id="yr"></span> JASTIP BAHCTIAR. Harga dan ketersediaan menu dapat berubah sewaktu-waktu.</div>
@@ -419,7 +425,6 @@ CITY_DATA.malang = [
     ]
   },
 
-
   {
     id:"mixue",
     name:"Resto Mixue",
@@ -447,7 +452,6 @@ CITY_DATA.malang = [
       {id:"mixue-17",name:"Latte",desc:"Espresso halus dengan susu creamy",price:11000,image:"images/latte.jpg",emoji:"☕"}
     ]
   },
-
 
   {
     id:"gacoan",
@@ -740,11 +744,123 @@ CITY_DATA.jember = [
       {id:"mixue-16",name:"Vitamin C Kiwi Tea",desc:"Teh kiwi segar dengan jelly kelapa",price:11000,image:"images/vitamin-c-kiwi-tea.jpg",emoji:"🍹"},
       {id:"mixue-17",name:"Latte",desc:"Espresso halus dengan susu creamy",price:11000,image:"images/latte.jpg",emoji:"☕"}
     ]
-  },
-
-
+  }
 ];
 
+// =====================================================================
+// KONFIGURASI DAERAH & PENAMBAHAN RESTO
+// =====================================================================
+const clone = o => JSON.parse(JSON.stringify(o));
+const getResto = (city, id) => CITY_DATA[city].find(r => r.id === id);
+
+// --- Kota baru: Surabaya & Sidoarjo ---
+CITIES.surabaya = {name:"Surabaya",emoji:"🍜",badge:"JASTIP SURABAYA",title:"Jajanan Surabaya<br>Siap Diantar.",text:"Pilih restoran favorit di Surabaya, pilih menu, checkout, lalu pesan via WhatsApp.",listTitle:"🍽️ Pilih Restoran Surabaya",listSub:"Daftar Resto Pilihan"};
+CITIES.sidoarjo = {name:"Sidoarjo",emoji:"🍜",badge:"JASTIP SIDOARJO",title:"Jajanan Sidoarjo<br>Siap Diantar.",text:"Pilih restoran favorit di Sidoarjo, pilih menu, checkout, lalu pesan via WhatsApp.",listTitle:"🍽️ Pilih Restoran Sidoarjo",listSub:"Daftar Resto Pilihan"};
+
+const SBY_GACOAN_PRICE = 13500;   // Gacoan: semua pcs 13.500
+const SBY_DIKICHI_DISKON = 1500;  // Dikichi: harga Malang - 1500
+const SBY_MIXUE_PRICE = 12000;    // Mixue: 12k menu sama aja
+
+function buildSurabayaSidoarjo(){
+  const gacoan = clone(getResto("malang","gacoan"));
+  gacoan.products.forEach(p => p.price = SBY_GACOAN_PRICE);
+  delete gacoan.notice;
+
+  const dikichi = clone(getResto("malang","dikichi"));
+  dikichi.products.forEach(p => p.price -= SBY_DIKICHI_DISKON);
+  delete dikichi.notice;
+
+  const mixue = clone(getResto("malang","mixue"));
+  mixue.products.forEach(p => p.price = SBY_MIXUE_PRICE);
+  delete mixue.notice;
+
+  return [gacoan, dikichi, mixue];
+}
+CITY_DATA.surabaya = buildSurabayaSidoarjo();
+CITY_DATA.sidoarjo = buildSurabayaSidoarjo();
+
+// --- Udang Rambutan di Resto Gacoan semua kota ---
+const UDANG_RAMBUTAN_IMG = "https://huawei-food-cms.grab.com/compressed_avif/items/url-cc4355f4/photo/c3d192e5d1ccbdc9.avif";
+Object.keys(CITY_DATA).forEach(city => {
+  const g = getResto(city,"gacoan");
+  if(!g) return;
+  const item = {
+    id:"gacoan-udang-rambutan",
+    name:"Udang Rambutan",
+    desc:"Udang berbalut adonan renyah, gurih dan cocok jadi pendamping mie",
+    price:g.products[0].price,
+    image:UDANG_RAMBUTAN_IMG,
+    emoji:"🍤"
+  };
+  const i = g.products.findIndex(p => p.name === "Udang Keju");
+  g.products.splice(i > -1 ? i + 1 : g.products.length, 0, item);
+});
+
+// --- Martabak MPR di semua kota ---
+const MPR_DISKON = 7000;
+const MPR_TAMBAHAN = {probolinggo:0, jember:0, malang:2000, surabaya:2000, sidoarjo:2000};
+const MPR_MENU = [
+ ["MPR Tipker Coklat", 8000, "Martabak tipis kering, renyah dan gurih", "images/mpr-tipker-coklat.webp"],
+ ["MPR Tipker Coklat Kacang", 8000, "1 Pcs Martabak Tipis Kering Coklat Kacang", "images/mpr-tipker-coklat-kacang.webp"],
+ ["MPR Tipker Kacang", 8000, "1 Pcs Martabak Tipis Kering Kacang", "images/mpr-tipker-kacang.webp"],
+ ["Martabak Tipker Sultan Cokelat Kacang Wijen", 8000, "Martabak tipis kering, renyah dan gurih", ""],
+ ["MPR Tipker Cokelat Keju Kacang", 9000, "Martabak tipis kering, renyah dan gurih", "images/mpr-tipker-cokelat-keju-kacang.webp"],
+ ["Martabak Tipker Sultan Keju", 10000, "Martabak tipis kering, renyah dan gurih", ""],
+ ["Tipker CKW (Double Toping)", 10000, "Martabak tipis kering, renyah dan gurih", ""],
+ ["MPR Tipker Keju", 11000, "1 Pcs Martabak Tipis Kering Keju", "images/mpr-tipker-keju.webp"],
+ ["MPR Tipker Peanut Butter", 11000, "1 Pcs Martabak Tipis Skippy", "images/mpr-tipker-peanut-butter.webp"],
+ ["MPR Tipker Peanut Butter Kacang", 11000, "1 Pcs Martabak Tipis Skippy Kacang", "images/mpr-tipker-peanut-butter-kacang.webp"],
+ ["MPR Tipker Cokelat Keju", 12000, "1 Pcs Martabak Tipis Coklat Keju", "images/mpr-tipker-cokelat-keju.webp"],
+ ["Martabak Pandan Cokelat", 14000, "Martabak manis mini, empuk dan legit", ""],
+ ["MPR Tipker Keju Kacang", 13000, "1 Pcs Martabak Tipis Keju Kacang", "images/mpr-tipker-keju-kacang.webp"],
+ ["MPR Tipker Peanut Butter Keju Coklat", 13000, "1 Pcs Martabak Tipis Skippy Keju Coklat", "images/mpr-tipker-peanut-butter-keju-coklat.webp"],
+ ["Martabak Pandan Keju", 14000, "Martabak manis mini, empuk dan legit", ""],
+ ["MPR Manis Coklat Kacang Susu", 14000, "1 Pcs Martabak Manis Mini Coklat Kacang Susu", "images/mpr-manis-coklat-kacang-susu.webp"],
+ ["MPR Manis Coklat Susu", 14000, "1 Pcs Martabak Manis Mini Coklat Susu", "images/mpr-manis-coklat-susu.webp"],
+ ["MPR Manis Kacang Susu", 14000, "1 Pcs Martabak Manis Mini Kacang Susu", "images/mpr-manis-kacang-susu.webp"],
+ ["Martabak Mini Sultan Cokelat Kacang Wijen", 15000, "Martabak mini sultan, tebal dan mengenyangkan", ""],
+ ["MPR Manis Keju Susu", 15500, "1 Pcs Martabak Manis Mini Keju Susu", "images/mpr-manis-keju-susu.webp"],
+ ["Martabak Mini Sultan Pandan Coklat Kacang Wijen", 16000, "Martabak mini sultan, tebal dan mengenyangkan", ""],
+ ["MPR Manis Coklat Keju Susu", 17000, "1 Pcs Martabak Manis Mini Coklat Keju Susu", "images/mpr-manis-coklat-keju-susu.webp"],
+ ["MPR Manis Peanut Butter", 17000, "1 Pcs Martabak Manis Mini Skippy", "images/mpr-manis-peanut-butter.webp"],
+ ["Martabak Mini Sultan Keju", 17000, "Martabak mini sultan, tebal dan mengenyangkan", ""],
+ ["MPR Manis Choco Crunchy", 18000, "1 Pcs Martabak Manis Mini Choco Crunchy", "images/mpr-manis-choco-crunchy.webp"],
+ ["MPR Manis Peanut Butter Coklat", 18000, "1 Pcs Martabak Manis Mini Skippy Coklat", "images/mpr-manis-peanut-butter-coklat.webp"],
+ ["MPR Manis Peanut Butter Coklat Keju", 18000, "1 Pcs Martabak Manis Mini Skippy Coklat Keju", "images/mpr-manis-peanut-butter-coklat-keju.webp"],
+ ["MPR Manis Peanut Butter Keju", 18000, "1 Pcs Martabak Manis Mini Skippy Keju", "images/mpr-manis-peanut-butter-keju.webp"],
+ ["Martabak Mini Sultan Pandan Keju", 18000, "Martabak mini sultan, tebal dan mengenyangkan", ""],
+ ["MPR Manis Choco Crunchy Keju", 19500, "1 Pcs Martabak Manis Mini Choco Crunchy Keju", "images/mpr-manis-choco-crunchy-keju.webp"]
+];
+
+Object.keys(CITY_DATA).forEach(city => {
+  const extra = MPR_TAMBAHAN[city] || 0;
+  CITY_DATA[city].push({
+    id: "mpr",
+    name: "Martabak MPR",
+    logo: "images/mpr-manis-coklat-keju-susu.webp",
+    banner: "",
+    emoji: "🥞",
+    products: MPR_MENU.map((m, i) => {
+      let finalPrice;
+      
+      // Jika menu adalah Tipker, patok harga dasar 7000 lalu tambahkan ongkir daerah (extra)
+      if (m[0].toLowerCase().includes("tipker")) {
+        finalPrice = 7000 + extra;
+      } else {
+        finalPrice = m[1] - MPR_DISKON + extra;
+      }
+
+      return {
+        id: "mpr-" + (i + 1),
+        name: m[0],
+        desc: m[2],
+        price: finalPrice,
+        image: m[3],
+        emoji: "🥞"
+      };
+    })
+  });
+});
 
 const STORE_WA = "6289612490808";
 
@@ -757,7 +873,6 @@ const rupiah = n => new Intl.NumberFormat("id-ID", {
   maximumFractionDigits: 0
 }).format(n);
 
-// Label pilihan: "Level 2" untuk level pedas, atau nama varian (mis. "Oreo")
 function optLabel(p, v) {
   if (!v) return "";
   return p.levels ? ` (Level ${v})` : ` (${v})`;
@@ -969,7 +1084,6 @@ function getLocation() {
   );
 }
 
-// Rapikan nomor: 0812xxxx / +62812xxxx / 812xxxx -> 62812xxxx. Kembali null jika tidak valid.
 function normPhone(raw){
   let d = (raw || "").replace(/[^\d]/g, "");
   if(d.startsWith("620")) d = "62" + d.slice(3);
@@ -1022,7 +1136,6 @@ function sendWhatsApp(){
   let total=0;
   let message="*PESANAN JASTIP " + CITIES[currentCity].name.toUpperCase() + "*\n\n";
 
-  // Kelompokkan pesanan per restoran (urutan sesuai daftar restoran)
   RESTAURANTS.forEach(r=>{
     const group=items.filter(({p})=>r.products.includes(p));
     if(!group.length) return;
@@ -1054,8 +1167,6 @@ function sendWhatsApp(){
   );
 }
 
-
-// Ganti kota tanpa pindah halaman
 function setCity(k, silent){
   if(!CITIES[k]) k = "probolinggo";
   if(!silent && currentCity && currentCity !== k && Object.keys(cart).length){
