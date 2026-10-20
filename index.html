@@ -1,34 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <script>
-  // Fungsi ini berjalan langsung saat halaman mulai dimuat
-  (function checkStore() {
-    var WORKER_URL = "https://jastip.bachtiarrhasann.workers.dev";
-    
-    fetch(WORKER_URL + '/status?t=' + Date.now())
-      .then(function(res) { return res.json(); })
-      .then(function(data) {
-        console.log("Status toko dari Worker:", data);
-        if (data && data.isOpen === false) {
-          // Menimpa tampilan seketika jika toko TUTUP
-          document.addEventListener("DOMContentLoaded", function() {
-            document.body.innerHTML = `
-              <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#f7f7f8;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;font-family:sans-serif;color:#171717;">
+<script>
+  (function() {
+    const WORKER_URL = "https://jastip.bachtiarrhasann.workers.dev";
+    if (!WORKER_URL) return;
+
+    function checkStoreStatus() {
+      fetch(WORKER_URL + '/status?t=' + Date.now())
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          console.log("Cek status toko:", data);
+          
+          // Cari apakah elemen overlay tutup sudah ada di layar
+          let existingOverlay = document.getElementById('store-closed-overlay');
+
+          if (data && data.isOpen === false) {
+            // Jika toko tutup dan overlay belum ada, buat dan tampilkan
+            if (!existingOverlay) {
+              const overlay = document.createElement('div');
+              overlay.id = 'store-closed-overlay';
+              overlay.style.position = 'fixed';
+              overlay.style.top = '0';
+              overlay.style.left = '0';
+              overlay.style.width = '100vw';
+              overlay.style.height = '100vh';
+              overlay.style.backgroundColor = '#f7f7f8';
+              overlay.style.zIndex = '99999999';
+              overlay.style.display = 'flex';
+              overlay.style.flexDirection = 'column';
+              overlay.style.alignItems = 'center';
+              overlay.style.justifyContent = 'center';
+              overlay.style.padding = '20px';
+              overlay.style.textAlign = 'center';
+              overlay.style.fontFamily = 'sans-serif';
+              overlay.style.color = '#171717';
+
+              overlay.innerHTML = `
                 <div style="font-size:70px;margin-bottom:10px;">🛑</div>
                 <h1 style="font-size:26px;margin:10px 0;font-weight:800;">MAAF, JASTIP SEDANG TUTUP</h1>
                 <p style="color:#666;max-width:380px;line-height:1.5;margin:0 auto 20px auto;">Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!</p>
                 <button onclick="location.reload()" style="border:0;background:#171717;color:#fff;padding:12px 24px;border-radius:999px;font-weight:700;cursor:pointer;">🔄 Coba Segarkan</button>
-              </div>
-            `;
-          });
-        }
-      })
-      .catch(function(err) {
-        console.log("Error fetch status:", err);
-      });
+              `;
+              document.body.appendChild(overlay);
+            }
+          } else {
+            // Jika toko buka kembali, hapus overlay jika sebelumnya sempat tampil
+            if (existingOverlay) {
+              existingOverlay.remove();
+            }
+          }
+        })
+        .catch(function(err) {
+          console.log("Gagal cek status:", err);
+        });
+    }
+
+    // Jalankan pengecekan setiap kali halaman dimuat dan ulangi setiap 5 detik
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkStoreStatus);
+    } else {
+      checkStoreStatus();
+    }
+    
+    setInterval(checkStoreStatus, 5000); // Cek otomatis tiap 5 detik
   })();
 </script>
+
+  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JASTIP BAHCTIAR</title>
