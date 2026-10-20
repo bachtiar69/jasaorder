@@ -3,67 +3,36 @@
 <head>
 <script>
   (function() {
-    const WORKER_URL = "https://jastip.bachtiarrhasann.workers.dev";
-    if (!WORKER_URL) return;
-
-    function checkStoreStatus() {
-      fetch(WORKER_URL + '/status?t=' + Date.now())
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          console.log("Cek status toko:", data);
-          
-          // Cari apakah elemen overlay tutup sudah ada di layar
-          let existingOverlay = document.getElementById('store-closed-overlay');
-
-          if (data && data.isOpen === false) {
-            // Jika toko tutup dan overlay belum ada, buat dan tampilkan
-            if (!existingOverlay) {
-              const overlay = document.createElement('div');
-              overlay.id = 'store-closed-overlay';
-              overlay.style.position = 'fixed';
-              overlay.style.top = '0';
-              overlay.style.left = '0';
-              overlay.style.width = '100vw';
-              overlay.style.height = '100vh';
-              overlay.style.backgroundColor = '#f7f7f8';
-              overlay.style.zIndex = '99999999';
-              overlay.style.display = 'flex';
-              overlay.style.flexDirection = 'column';
-              overlay.style.alignItems = 'center';
-              overlay.style.justifyContent = 'center';
-              overlay.style.padding = '20px';
-              overlay.style.textAlign = 'center';
-              overlay.style.fontFamily = 'sans-serif';
-              overlay.style.color = '#171717';
-
-              overlay.innerHTML = `
+    var xhr = new XMLHttpRequest();
+    // Gunakan synchronous request atau async biasa dengan timestamp agar tidak kena cache
+    xhr.open('GET', 'https://jastip.bachtiarrhasann.workers.dev/status?t=' + Date.now(), false);
+    try {
+      xhr.send();
+      if (xhr.status === 200) {
+        var res = JSON.parse(xhr.responseText);
+        if (res && res.isOpen === false) {
+          document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Toko Tutup</title>
+            </head>
+            <body style="margin:0;padding:0;background:#f7f7f8;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;">
+              <div style="padding:20px;">
                 <div style="font-size:70px;margin-bottom:10px;">🛑</div>
-                <h1 style="font-size:26px;margin:10px 0;font-weight:800;">MAAF, JASTIP SEDANG TUTUP</h1>
+                <h1 style="font-size:26px;margin:10px 0;font-weight:800;color:#171717;">MAAF, JASTIP SEDANG TUTUP</h1>
                 <p style="color:#666;max-width:380px;line-height:1.5;margin:0 auto 20px auto;">Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!</p>
                 <button onclick="location.reload()" style="border:0;background:#171717;color:#fff;padding:12px 24px;border-radius:999px;font-weight:700;cursor:pointer;">🔄 Coba Segarkan</button>
-              `;
-              document.body.appendChild(overlay);
-            }
-          } else {
-            // Jika toko buka kembali, hapus overlay jika sebelumnya sempat tampil
-            if (existingOverlay) {
-              existingOverlay.remove();
-            }
-          }
-        })
-        .catch(function(err) {
-          console.log("Gagal cek status:", err);
-        });
+              </div>
+            </body>
+            </html>
+          `);
+        }
+      }
+    } catch (e) {
+      console.error("Gagal cek status:", e);
     }
-
-    // Jalankan pengecekan setiap kali halaman dimuat dan ulangi setiap 5 detik
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', checkStoreStatus);
-    } else {
-      checkStoreStatus();
-    }
-    
-    setInterval(checkStoreStatus, 5000); // Cek otomatis tiap 5 detik
   })();
 </script>
 
