@@ -15,6 +15,9 @@
     }
 
     function applyStoreStatus() {
+      // Jika user sudah klik paksa masuk via pre-order, jangan tampilkan overlay tutup lagi di sesi ini
+      if (sessionStorage.getItem('force_preorder') === 'true') return;
+
       fetch(WORKER_URL + '/status?t=' + Date.now())
         .then(function(res) { return res.json(); })
         .then(function(data) {
@@ -45,7 +48,7 @@
               `;
 
               let title = "MAAF, JASTIP SEDANG TUTUP";
-              let desc = "Toko kami sedang libur atau tutup sementara. Kamu tetap bisa membuat pesanan (Pre-Order) untuk nanti ya!";
+              let desc = "Toko kami sedang libur atau tutup sementara. Tapi kamu tetap bisa membuat pesanan Pre-Order untuk nanti!";
               let timerHTML = "";
 
               if (data.status === "antri" && data.remainingSeconds > 0) {
@@ -57,8 +60,14 @@
               overlay.innerHTML = `
                 <div style="font-size:64px; line-height:1; margin-bottom:16px;">🛑</div>
                 <h1 style="font-size:24px; font-weight:800; margin:0 0 12px 0; color:#171717; line-height:1.2;">${title}</h1>
-                <p style="color:#666; font-size:14px; max-width:360px; line-height:1.5; margin:0 0 16px 0;">${desc}</p>
+                <p style="color:#666; font-size:14px; max-width:380px; line-height:1.5; margin:0 0 18px 0;">${desc}</p>
                 ${timerHTML}
+                
+                <!-- TOMBOL PRE-ORDER DI OVERLAY -->
+                <button onclick="bukaPreOrderOverlay()" style="border:none; background:#f97316; color:#fff; text-decoration:none; padding:14px 28px; border-radius:999px; font-weight:800; font-size:15px; margin-bottom:12px; cursor:pointer; box-shadow:0 4px 12px rgba(249,115,22,0.3);">
+                  🛒 Buat Pesanan Pre-Order Sekarang
+                </button>
+
                 <a href="https://chat.whatsapp.com/BmMIhjI3diz8nRRt0znuZQ?s=cl&p=a&mlu=4&ilr=4" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#25D366; color:#fff; text-decoration:none; padding:12px 24px; border-radius:999px; font-weight:700; font-size:14px; margin-bottom:12px; box-shadow:0 4px 12px rgba(37,211,102,0.3);">
                   💬 Masuk Group untuk Info Lebih Lanjut
                 </a>
@@ -100,6 +109,14 @@
           console.log("Gagal cek status:", err);
         });
     }
+
+    window.bukaPreOrderOverlay = function() {
+      sessionStorage.setItem('force_preorder', 'true');
+      let overlay = document.getElementById('store-closed-overlay');
+      if (overlay) overlay.remove();
+      document.body.style.overflow = '';
+      if (countdownInterval) clearInterval(countdownInterval);
+    };
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', applyStoreStatus);
@@ -351,10 +368,10 @@ document.addEventListener('click',function(e){
 
     <div id="orderBox"></div>
 
-    <div class="field">
-      <label>⏰ Waktu Pengiriman / Jam Pre-Order (Minimal Pukul 10.00 Pagi)</label>
+    <div class="field" style="background:#fff7ed; border:1px solid #fdba74; padding:14px; border-radius:16px;">
+      <label style="color:#9a3412; font-size:14px; margin-bottom:10px;">📅 WAKTU PENGIRIMAN (PRE-ORDER)</label>
+      <label style="font-size:12px; color:#666; margin-bottom:6px;">Pilih jam pengiriman pesanan (Minimal mulai pukul 10:00 Pagi):</label>
       <select id="orderTime">
-        <option value="Secepatnya (Jika Toko Buka)">⚡ Kirim Secepatnya (Jika Toko Buka)</option>
         <option value="Pukul 10:00 Pagi">⏰ Pukul 10:00 Pagi</option>
         <option value="Pukul 11:00 Pagi">⏰ Pukul 11:00 Pagi</option>
         <option value="Pukul 12:00 Siang">⏰ Pukul 12:00 Siang</option>
@@ -1268,7 +1285,7 @@ function sendWhatsApp(){
   });
 
   message+=`*Total:* ${rupiah(total)}\n`;
-  message+=`⏰ *Jadwal Kirim:* ${orderTime}\n`;
+  message+=`⏰ *Jadwal Pre-Order Kirim:* ${orderTime}\n`;
   message+=`📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
   message+=plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
   if(locationLink) message+=`🔗 *Link Maps:* ${locationLink}\n`;
