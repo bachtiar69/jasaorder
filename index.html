@@ -6,6 +6,14 @@
     const WORKER_URL = "https://jastip.bachtiarrhasann.workers.dev";
     if (!WORKER_URL) return;
 
+    let countdownInterval = null;
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
     function applyStoreStatus() {
       fetch(WORKER_URL + '/status?t=' + Date.now())
         .then(function(res) { return res.json(); })
@@ -36,15 +44,24 @@
                 box-sizing: border-box !important;
               `;
 
+              let title = "MAAF, JASTIP SEDANG TUTUP";
+              let desc = "Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!";
+              let timerHTML = "";
+
+              if (data.status === "antri" && data.remainingSeconds > 0) {
+                title = "SISTEM ANTREAN DIBUKA";
+                desc = "Antrian panjang. Mohon tunggu sejenak";
+                timerHTML = `<div id="antri-timer" style="font-size:36px; font-weight:900; color:#e11d48; margin:10px 0 20px 0; background:#ffe4e6; padding:10px 24px; border-radius:16px; border:2px dashed #f43f5e;">⏳ ${formatTime(data.remainingSeconds)}</div>`;
+              }
+
               overlay.innerHTML = `
                 <div style="font-size:64px; line-height:1; margin-bottom:16px;">🛑</div>
-                <h1 style="font-size:24px; font-weight:800; margin:0 0 12px 0; color:#171717; line-height:1.2;">MAAF, JASTIP SEDANG TUTUP</h1>
-                <p style="color:#666; font-size:14px; max-width:360px; line-height:1.5; margin:0 0 20px 0;">Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!</p>
-                
+                <h1 style="font-size:24px; font-weight:800; margin:0 0 12px 0; color:#171717; line-height:1.2;">${title}</h1>
+                <p style="color:#666; font-size:14px; max-width:360px; line-height:1.5; margin:0 0 16px 0;">${desc}</p>
+                ${timerHTML}
                 <a href="https://chat.whatsapp.com/BmMIhjI3diz8nRRt0znuZQ?s=cl&p=a&mlu=4&ilr=4" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#25D366; color:#fff; text-decoration:none; padding:12px 24px; border-radius:999px; font-weight:700; font-size:14px; margin-bottom:12px; box-shadow:0 4px 12px rgba(37,211,102,0.3);">
                   💬 Masuk Group untuk Info Lebih Lanjut
                 </a>
-
                 <div>
                   <button onclick="location.reload()" style="border:none; background:transparent; color:#666; text-decoration:underline; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer;">🔄 Coba Segarkan Halaman</button>
                 </div>
@@ -52,12 +69,32 @@
 
               document.body.appendChild(overlay);
               document.body.style.overflow = 'hidden';
+
+              // Jalankan Countdown Real-time jika dalam mode antri
+              if (data.status === "antri" && data.remainingSeconds > 0) {
+                let secLeft = data.remainingSeconds;
+                if (countdownInterval) clearInterval(countdownInterval);
+                
+                countdownInterval = setInterval(() => {
+                  secLeft--;
+                  const timerElem = document.getElementById('antri-timer');
+                  if (timerElem) {
+                    if (secLeft <= 0) {
+                      clearInterval(countdownInterval);
+                      location.reload(); // Otomatis reload & buka web saat waktu habis
+                    } else {
+                      timerElem.innerText = `⏳ ${formatTime(secLeft)}`;
+                    }
+                  }
+                }, 1000);
+              }
             }
           } else {
             if (overlay) {
               overlay.remove();
               document.body.style.overflow = '';
             }
+            if (countdownInterval) clearInterval(countdownInterval);
           }
         })
         .catch(function(err) {
@@ -70,9 +107,10 @@
     } else {
       applyStoreStatus();
     }
+
+    setInterval(applyStoreStatus, 10000); // Sinkronisasi ulang ke server setiap 10 detik
   })();
 </script>
-
   
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
