@@ -17,7 +17,6 @@
               overlay = document.createElement('div');
               overlay.id = 'store-closed-overlay';
               
-              // CSS Reset & Absolute Overlay Isolasi
               overlay.style.cssText = `
                 position: fixed !important;
                 top: 0 !important;
@@ -40,17 +39,24 @@
               overlay.innerHTML = `
                 <div style="font-size:64px; line-height:1; margin-bottom:16px;">🛑</div>
                 <h1 style="font-size:24px; font-weight:800; margin:0 0 12px 0; color:#171717; line-height:1.2;">MAAF, JASTIP SEDANG TUTUP</h1>
-                <p style="color:#666; font-size:14px; max-width:360px; line-height:1.5; margin:0 0 24px 0;">Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!</p>
-                <button onclick="location.reload()" style="border:none; background:#171717; color:#fff; padding:12px 28px; border-radius:999px; font-weight:700; font-size:14px; cursor:pointer;">🔄 Coba Segarkan</button>
+                <p style="color:#666; font-size:14px; max-width:360px; line-height:1.5; margin:0 0 20px 0;">Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!</p>
+                
+                <a href="https://chat.whatsapp.com/BmMIhjI3diz8nRRt0znuZQ?s=cl&p=a&mlu=4&ilr=4" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#25D366; color:#fff; text-decoration:none; padding:12px 24px; border-radius:999px; font-weight:700; font-size:14px; margin-bottom:12px; box-shadow:0 4px 12px rgba(37,211,102,0.3);">
+                  💬 Masuk Group untuk Info Lebih Lanjut
+                </a>
+
+                <div>
+                  <button onclick="location.reload()" style="border:none; background:transparent; color:#666; text-decoration:underline; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer;">🔄 Coba Segarkan Halaman</button>
+                </div>
               `;
 
               document.body.appendChild(overlay);
-              document.body.style.overflow = 'hidden'; // Matikan scroll halaman belakang
+              document.body.style.overflow = 'hidden';
             }
           } else {
             if (overlay) {
               overlay.remove();
-              document.body.style.overflow = ''; // Balikkan scroll normal
+              document.body.style.overflow = '';
             }
           }
         })
