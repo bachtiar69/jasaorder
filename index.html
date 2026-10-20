@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#171717">
 <meta property="og:type" content="website">
 <meta property="og:title" content="JASTIP BAHCTIAR - Pesan Makanan via WhatsApp">
-<meta property="og:description" content="Jastip makanan dan minuman Probolinggo, Malang, Jember, Surabaya &amp; Sidoarjo. Pilih restmproran dan menu, checkout, lalu pesan langsung via WhatsApp.">
+<meta property="og:description" content="Jastip makanan dan minuman Probolinggo, Malang, Jember, Surabaya &amp; Sidoarjo. Pilih restoran dan menu, checkout, lalu pesan langsung via WhatsApp.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍴%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box}
@@ -39,7 +39,7 @@ header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdro
 .add{width:100%;border:0;background:#f97316;color:white;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}
 .add:active{transform:scale(.98)}
 .toast{position:fixed;top:78px;left:50%;transform:translateX(-50%) translateY(-20px);background:#171717;color:#fff;padding:12px 18px;border-radius:999px;font-weight:800;z-index:60;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.editRow{display:flex;align-items:center;gap:8px;margin-top:8px}.qtyBtn{border:0;background:#eee;border-radius:999px;width:32px;height:32px;font-size:18px;font-weight:900;cursor:pointer}.removeBtn{margin-left:auto;border:0;background:#fee2e2;color:#b91c1c;border-radius:9px;padding:7px 10px;font-weight:800;cursor:pointer}
+.editRow{display:flex;align-items:center;gap:8px;margin-top:8px}.qtyBtn{border:0;background:#eee;border-radius:999px;width:32px;height:32px;font-size:18px;font-weight:900;cursor:pointer}.removeBtn{margin-left:auto;border:0;background:#fee2e2;color:#b91c1c;border-radius:999px;padding:7px 10px;font-weight:800;cursor:pointer}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #eee;padding:12px 18px;z-index:20}
 .bottomIn{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
 .checkout{border:0;background:#16a34a;color:white;padding:13px 20px;border-radius:13px;font-weight:900;cursor:pointer}
@@ -113,6 +113,32 @@ html{scroll-behavior:smooth}
 </head>
 <body>
 
+<script>
+// ==========================================
+// CEK STATUS TOKO DARI CLOUDFLARE WORKER
+// ==========================================
+const WORKER_URL = "https://jasaorder.bachtiarrhasann.workers.dev";
+
+(function checkStoreStatus() {
+  if (!WORKER_URL || WORKER_URL.includes("NAMA_WORKER_KAMU")) return;
+  fetch(WORKER_URL)
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.isOpen === false) {
+        document.body.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;font-family:sans-serif;background:#f7f7f8;color:#171717;">
+            <div style="font-size:70px;margin-bottom:10px;">🛑</div>
+            <h1 style="font-size:28px;margin:10px 0;font-weight:800;">MAAF, JASTIP SEDANG TUTUP</h1>
+            <p style="color:#666;max-width:400px;line-height:1.5;margin-bottom:20px;">Toko kami sedang libur atau tutup sementara. Silakan kembali lagi nanti ya!</p>
+            <button onclick="location.reload()" style="border:0;background:#171717;color:#fff;padding:12px 24px;border-radius:999px;font-weight:700;cursor:pointer;">🔄 Coba Segarkan</button>
+          </div>
+        `;
+      }
+    })
+    .catch(err => console.log('Gagal cek status toko:', err));
+})();
+</script>
+
 <div class="kotaOverlay show" id="kotaOverlay" role="dialog" aria-modal="true" aria-labelledby="kotaJudul">
   <div class="kotaBox">
     <div class="kotaBrand">🍴 <span>JASTIP</span> BAHCTIAR</div>
@@ -147,7 +173,7 @@ html{scroll-behavior:smooth}
     </div>
   </div>
 </div>
-<>
+<script>
 (function(){
   var ov=document.getElementById('kotaOverlay');
   var qs=new URLSearchParams(location.search), s=null;
@@ -157,25 +183,6 @@ html{scroll-behavior:smooth}
     window.__kota=k; ov.classList.remove('show');
     try{sessionStorage.setItem('kota',k)}catch(e){}
   } else { window.__kota=(['probolinggo','malang','jember','surabaya','sidoarjo'].indexOf(k)>-1?k:'probolinggo'); document.body.classList.add('locked'); }
-})();
-
-
-  // Cek status buka/tutup toko secara otomatis
-(function checkStatus() {
-  fetch('status.json?v=' + Date.now())
-    .then(res => res.json())
-    .then(data => {
-      if (data && data.isOpen === false) {
-        document.body.innerHTML = `
-          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;font-family:sans-serif;background:#f7f7f8;color:#171717;">
-            <div style="font-size:70px;margin-bottom:10px;">🛑</div>
-            <h1 style="font-size:28px;margin:10px 0;">MAAF, JASTIP SEDANG TUTUP</h1>
-            <p style="color:#666;max-width:400px;line-height:1.5;">Toko kami sedang libur atau tutup sementara. Silakan balik lagi nanti ya!</p>
-          </div>
-        `;
-      }
-    })
-    .catch(err => console.log('Gagal memuat status toko'));
 })();
 </script>
 
@@ -830,10 +837,10 @@ const MPR_MENU = [
  ["MPR Tipker Peanut Butter", 11000, "1 Pcs Martabak Tipis Skippy", "images/mpr-tipker-peanut-butter.webp"],
  ["MPR Tipker Peanut Butter Kacang", 11000, "1 Pcs Martabak Tipis Skippy Kacang", "images/mpr-tipker-peanut-butter-kacang.webp"],
  ["MPR Tipker Cokelat Keju", 12000, "1 Pcs Martabak Tipis Coklat Keju", "images/mpr-tipker-cokelat-keju.webp"],
- ["Martabak Pandan Cokelat", 14000, "Martabak manis mini, empuk dan legit", ""],
+ ["Martabak Pandan Cokelat", 12000, "Martabak manis mini, empuk dan legit", ""],
  ["MPR Tipker Keju Kacang", 13000, "1 Pcs Martabak Tipis Keju Kacang", "images/mpr-tipker-keju-kacang.webp"],
  ["MPR Tipker Peanut Butter Keju Coklat", 13000, "1 Pcs Martabak Tipis Skippy Keju Coklat", "images/mpr-tipker-peanut-butter-keju-coklat.webp"],
- ["Martabak Pandan Keju", 14000, "Martabak manis mini, empuk dan legit", ""],
+ ["Martabak Pandan Keju", 13000, "Martabak manis mini, empuk dan legit", ""],
  ["MPR Manis Coklat Kacang Susu", 14000, "1 Pcs Martabak Manis Mini Coklat Kacang Susu", "images/mpr-manis-coklat-kacang-susu.webp"],
  ["MPR Manis Coklat Susu", 14000, "1 Pcs Martabak Manis Mini Coklat Susu", "images/mpr-manis-coklat-susu.webp"],
  ["MPR Manis Kacang Susu", 14000, "1 Pcs Martabak Manis Mini Kacang Susu", "images/mpr-manis-kacang-susu.webp"],
@@ -854,28 +861,22 @@ const MPR_MENU = [
 Object.keys(CITY_DATA).forEach(city => {
   const extra = MPR_TAMBAHAN[city] || 0;
   CITY_DATA[city].push({
-    id: "mpr",
-    name: "Martabak MPR",
-    logo: "images/mpr-manis-coklat-keju-susu.webp",
-    banner: "",
-    emoji: "🥞",
-    products: MPR_MENU.map((m, i) => {
+    id:"mpr",
+    name:"Martabak MPR",
+    logo:"images/mpr-manis-coklat-keju-susu.webp",
+    banner:"",
+    emoji:"🥞",
+    products: MPR_MENU.map((m,i) => {
       let finalPrice;
-      
-      // Jika menu adalah Tipker, patok harga dasar 7000 lalu tambahkan ongkir daerah (extra)
       if (m[0].toLowerCase().includes("tipker")) {
         finalPrice = 7000 + extra;
       } else {
         finalPrice = m[1] - MPR_DISKON + extra;
       }
-
       return {
-        id: "mpr-" + (i + 1),
-        name: m[0],
-        desc: m[2],
+        id:"mpr-"+(i+1), name:m[0], desc:m[2],
         price: finalPrice,
-        image: m[3],
-        emoji: "🥞"
+        image:m[3], emoji:"🥞"
       };
     })
   });
