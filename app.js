@@ -264,6 +264,14 @@ function openCheckout() {
     return;
   }
 
+  // Tampilkan/Sembunyikan kolom Pre-Order berdasarkan status toko
+  const preorderField = document.getElementById("preorderField");
+  const isPreorder = sessionStorage.getItem("force_preorder") === "true";
+  
+  if (preorderField) {
+    preorderField.style.display = isPreorder ? "block" : "none";
+  }
+
   const lines = items.map(({ p, level, qty }) => {
     const key = level ? `${p.id}|${level}` : p.id;
     return `
