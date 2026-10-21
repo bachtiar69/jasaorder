@@ -122,7 +122,8 @@
 
     <div id="orderBox"></div>
 
-    <div class="field" style="background:#fff7ed; border:1px solid #fdba74; padding:14px; border-radius:16px;">
+    <!-- KOLOM PRE-ORDER: Disembunyikan secara default -->
+    <div class="field" id="preorderField" style="display:none; background:#fff7ed; border:1px solid #fdba74; padding:14px; border-radius:16px;">
       <label style="color:#9a3412; font-size:14px; margin-bottom:10px;">📅 WAKTU PENGIRIMAN (PRE-ORDER)</label>
       <label style="font-size:12px; color:#666; margin-bottom:6px;">Pilih jam pengiriman pesanan (Minimal mulai pukul 10:00 Pagi):</label>
       <select id="orderTime">
@@ -135,10 +136,11 @@
         <option value="Pukul 16:00 Sore">⏰ Pukul 16:00 Sore</option>
         <option value="Pukul 17:00 Sore">⏰ Pukul 17:00 Sore</option>
         <option value="Pukul 18:00 Malam">⏰ Pukul 18:00 Malam</option>
-        <option value="Pukul 19:00 Malam">⏰ Pukul 19:00 Malam</option>
-        <option value="Pukul 20:00 Malam">⏰ Pukul 20:00 Malam</option>
+        <option value="Pukul 19:00 Malam">⏰ Pukul 20:00 Malam</option>
       </select>
     </div>
+
+    <!-- FIELD NAMA, TELEPON, LOKASI DSN... -->
 
     <div class="field">
       <label>Nama pembeli</label>
