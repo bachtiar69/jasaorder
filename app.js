@@ -382,10 +382,11 @@ function cekNomor(){
 }
 
 function sendWhatsApp(){
-  const orderTime=document.getElementById("orderTime").value;
-  const name=document.getElementById("name").value.trim();
-  const phone=document.getElementById("phone").value.trim();
-  const landmark=document.getElementById("landmark").value.trim();
+  const isPreorder = sessionStorage.getItem("force_preorder") === "true";
+  const orderTime = isPreorder ? document.getElementById("orderTime").value : "Langsung Diproses (Toko Buka)";
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const landmark = document.getElementById("landmark").value.trim();
 
   if(!name || !phone){
     alert("Nama dan nomor WhatsApp wajib diisi.");
@@ -399,35 +400,42 @@ function sendWhatsApp(){
   }
   if(!confirm("Nomor WhatsApp kamu: " + fmtPhone(phoneN) + "\n\nSudah benar?")) return;
 
-  const items=getCartItems();
-  let total=0;
-  let message="*PESANAN JASTIP " + CITIES[currentCity].name.toUpperCase() + "*\n\n";
+  const items = getCartItems();
+  let total = 0;
+  let message = "*PESANAN JASTIP " + CITIES[currentCity].name.toUpperCase() + "*\n\n";
 
-  RESTAURANTS.forEach(r=>{
-    const group=items.filter(({p})=>r.products.includes(p));
+  RESTAURANTS.forEach(r => {
+    const group = items.filter(({p}) => r.products.includes(p));
     if(!group.length) return;
-    let subtotal=0;
-    message+=`🍽️ *${r.name.toUpperCase()}*\n`;
-    group.forEach(({p,level,qty})=>{
-      const sub=p.price*qty;
-      subtotal+=sub;
-      message+=`• ${p.name}${optLabel(p, level)} × ${qty} = ${rupiah(sub)}\n`;
+    let subtotal = 0;
+    message += `🍽️ *${r.name.toUpperCase()}*\n`;
+    group.forEach(({p, level, qty}) => {
+      const sub = p.price * qty;
+      subtotal += sub;
+      message += `• ${p.name}${optLabel(p, level)} × ${qty} = ${rupiah(sub)}\n`;
     });
-    message+=`_Subtotal: ${rupiah(subtotal)}_\n\n`;
-    total+=subtotal;
+    message += `_Subtotal: ${rupiah(subtotal)}_\n\n`;
+    total += subtotal;
   });
 
-  message+=`*Total:* ${rupiah(total)}\n`;
-  message+=`⏰ *Jadwal Pre-Order Kirim:* ${orderTime}\n`;
-  message+=`📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
-  message+=plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
-  if(locationLink) message+=`🔗 *Link Maps:* ${locationLink}\n`;
-  message+=`\n👤 *Nama:* ${name}\n`+
-    `📞 *WhatsApp:* ${fmtPhone(phoneN)}\n`+
-    `🏠 *Ancer-ancer:* ${landmark || "-"}\n\n`+
+  message += `*Total:* ${rupiah(total)}\n`;
+  
+  // Hanya tampilkan baris jadwal kirim jika Pre-Order
+  if (isPreorder) {
+    message += `⏰ *Jadwal Pre-Order Kirim:* ${orderTime}\n`;
+  } else {
+    message += `⚡ *Tipe Pesanan:* Kirim Langsung (Toko Buka)\n`;
+  }
+  
+  message += `📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
+  message += plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
+  if(locationLink) message += `🔗 *Link Maps:* ${locationLink}\n`;
+  message += `\n👤 *Nama:* ${name}\n` +
+    `📞 *WhatsApp:* ${fmtPhone(phoneN)}\n` +
+    `🏠 *Ancer-ancer:* ${landmark || "-"}\n\n` +
     `🙏 *Untuk driver:* mohon hubungi saya lewat *chat WhatsApp* di nomor di atas ya saat sudah dekat/sampai atau jika ada kendala. Terima kasih banyak, om 🙏`;
 
-  message=encodeURIComponent(message);
+  message = encodeURIComponent(message);
 
   window.open(
     `https://wa.me/${STORE_WA}?text=${message}`,
