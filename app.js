@@ -11,8 +11,6 @@
   }
 
   function applyStoreStatus() {
-    if (sessionStorage.getItem('force_preorder') === 'true') return;
-
     fetch(WORKER_URL + '/status?t=' + Date.now())
       .then(function(res) { return res.json(); })
       .then(function(data) {
@@ -43,7 +41,7 @@
             `;
 
             let title = "MAAF, JASTIP SEDANG TUTUP";
-            let desc = "Toko kami sedang libur atau tutup sementara. Tapi kamu tetap bisa membuat pesanan Pre-Order untuk nanti!";
+            let desc = "Toko kami sedang libur atau tutup sementara. Silakan cek kembali nanti ya!";
             let timerHTML = "";
 
             if (data.status === "antri" && data.remainingSeconds > 0) {
@@ -58,10 +56,6 @@
               <p style="color:#666; font-size:14px; max-width:380px; line-height:1.5; margin:0 0 18px 0;">${desc}</p>
               ${timerHTML}
               
-              <button onclick="bukaPreOrderOverlay()" style="border:none; background:#f97316; color:#fff; text-decoration:none; padding:14px 28px; border-radius:999px; font-weight:800; font-size:15px; margin-bottom:12px; cursor:pointer; box-shadow:0 4px 12px rgba(249,115,22,0.3);">
-                🛒 Buat Pesanan Pre-Order Sekarang
-              </button>
-
               <a href="https://chat.whatsapp.com/BmMIhjI3diz8nRRt0znuZQ?s=cl&p=a&mlu=4&ilr=4" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#25D366; color:#fff; text-decoration:none; padding:12px 24px; border-radius:999px; font-weight:700; font-size:14px; margin-bottom:12px; box-shadow:0 4px 12px rgba(37,211,102,0.3);">
                 💬 Masuk Group untuk Info Lebih Lanjut
               </a>
@@ -103,14 +97,6 @@
         console.log("Gagal cek status:", err);
       });
   }
-
-  window.bukaPreOrderOverlay = function() {
-    sessionStorage.setItem('force_preorder', 'true');
-    let overlay = document.getElementById('store-closed-overlay');
-    if (overlay) overlay.remove();
-    document.body.style.overflow = '';
-    if (countdownInterval) clearInterval(countdownInterval);
-  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', applyStoreStatus);
@@ -264,14 +250,6 @@ function openCheckout() {
     return;
   }
 
-  // Tampilkan/Sembunyikan kolom Pre-Order berdasarkan status toko
-  const preorderField = document.getElementById("preorderField");
-  const isPreorder = sessionStorage.getItem("force_preorder") === "true";
-  
-  if (preorderField) {
-    preorderField.style.display = isPreorder ? "block" : "none";
-  }
-
   const lines = items.map(({ p, level, qty }) => {
     const key = level ? `${p.id}|${level}` : p.id;
     return `
@@ -368,22 +346,8 @@ function phoneHint(){
   st.style.color = n ? "#15803d" : "#b91c1c";
   st.textContent = n ? "✅ " + fmtPhone(n) : "❌ Nomor belum valid. Contoh: 0812xxxxxxxx";
 }
-function cekNomor(){
-  const n = normPhone(document.getElementById("phone").value);
-  const st = document.getElementById("phoneStatus");
-  if(!n){
-    st.style.color = "#b91c1c";
-    st.textContent = "❌ Nomor belum valid. Contoh: 0812xxxxxxxx";
-    return;
-  }
-  st.style.color = "#15803d";
-  st.textContent = "✅ " + fmtPhone(n) + " · WhatsApp dibuka, pastikan chat bisa terbuka (jika muncul peringatan, nomor belum terdaftar)";
-  window.open("https://wa.me/" + n, "_blank");
-}
 
 function sendWhatsApp(){
-  const isPreorder = sessionStorage.getItem("force_preorder") === "true";
-  const orderTime = isPreorder ? document.getElementById("orderTime").value : "Langsung Diproses (Toko Buka)";
   const name = document.getElementById("name").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const landmark = document.getElementById("landmark").value.trim();
@@ -419,20 +383,13 @@ function sendWhatsApp(){
   });
 
   message += `*Total:* ${rupiah(total)}\n`;
-  
-  // Hanya tampilkan baris jadwal kirim jika Pre-Order
-  if (isPreorder) {
-    message += `⏰ *Jadwal Pre-Order Kirim:* ${orderTime}\n`;
-  } else {
-    message += `⚡ *Tipe Pesanan:* Kirim Langsung (Toko Buka)\n`;
-  }
-  
   message += `📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
   message += plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
   if(locationLink) message += `🔗 *Link Maps:* ${locationLink}\n`;
-// Menggunakan variabel 'phone' langsung agar format nomor sesuai input pelanggan (contoh: 089222869412)
+  
   message += `\n${name}, wa ${phone}, ${landmark || "-"}\n\n` +
     `🙏 *Untuk driver:* mohon hubungi saya lewat *chat WhatsApp* di nomor di atas ya saat sudah dekat/sampai atau jika ada kendala. Terima kasih banyak, om 🙏`;
+    
   message = encodeURIComponent(message);
 
   window.open(
