@@ -430,11 +430,9 @@ function sendWhatsApp(){
   message += `📢 *AKAN SAYA KABARI JIKA ADA ONGKIR TAMBAHAN*\n\n`;
   message += plusCode ? `📍 *Plus Code Google Maps:* ${plusCode}\n` : `📍 *Plus Code Google Maps:* Lokasi belum dibagikan\n`;
   if(locationLink) message += `🔗 *Link Maps:* ${locationLink}\n`;
-  message += `\n👤 *Nama:* ${name}\n` +
-    `📞 *WhatsApp:* ${fmtPhone(phoneN)}\n` +
-    `🏠 *Ancer-ancer:* ${landmark || "-"}\n\n` +
+// Menggunakan variabel 'phone' langsung agar format nomor sesuai input pelanggan (contoh: 089222869412)
+  message += `\n${name}, wa ${phone}, ${landmark || "-"}\n\n` +
     `🙏 *Untuk driver:* mohon hubungi saya lewat *chat WhatsApp* di nomor di atas ya saat sudah dekat/sampai atau jika ada kendala. Terima kasih banyak, om 🙏`;
-
   message = encodeURIComponent(message);
 
   window.open(
